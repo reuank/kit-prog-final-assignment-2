@@ -2,17 +2,23 @@ package task.olympia.commands;
 
 import task.constructs.program.Argument;
 import task.constructs.program.CommandSignature;
+import task.exceptions.AuthException;
 import task.exceptions.InvalidCallOfCommandException;
 import task.exceptions.ValidationException;
+import task.interfaces.IRestrictedCommand;
 import task.olympia.OlympiaApplication;
-import task.olympia.validation.OlympiaValidator;
+import task.userinterface.auth.Permission;
+import task.userinterface.validation.InputValidator;
 import task.interfaces.ICommand;
 import task.interfaces.IExecutableCommand;
 
 import static task.constructs.program.Datatype.STRING;
+import static task.userinterface.auth.Permission.MUST_BE_ADMIN;
+import static task.userinterface.auth.Permission.MUST_BE_LOGGED_IN;
 
-public class SummaryAthletesCommand implements IExecutableCommand {
-    private OlympiaApplication app; //TODO Come up with a good data holding variant
+public class SummaryAthletesCommand implements IExecutableCommand, IRestrictedCommand {
+    private OlympiaApplication app;
+    private Permission[] requiredPermissions = new Permission[]{MUST_BE_LOGGED_IN, MUST_BE_ADMIN};
     private CommandSignature commandSignature = new CommandSignature(
             "summary-athletes",
             new Argument("sport_type", STRING),
@@ -24,10 +30,16 @@ public class SummaryAthletesCommand implements IExecutableCommand {
     }
 
     @Override
+    public Permission[] getPermissionFlags() {
+        return this.requiredPermissions;
+    }
+
+    @Override
     public void tryToExecute(ICommand command, StringBuilder outputStream) throws InvalidCallOfCommandException {
         try {
-            // Check the passed command against the signature it should have
-            OlympiaValidator.validateCommand(command, this.commandSignature);
+            this.checkPermissions(this.app.getSession());
+
+            this.app.getInputValidator().validateCommand(command, this.commandSignature);
 
             outputStream.append("OK");
         } catch (ValidationException validationException) {
@@ -36,10 +48,9 @@ public class SummaryAthletesCommand implements IExecutableCommand {
                     this.commandSignature.getCommandSignature(),
                     validationException.getMessage()
             );
+        } catch (AuthException authException) {
+            throw new InvalidCallOfCommandException(authException.getMessage());
         }
-        /* catch (RegistrationException exception) {
-            throw new InvalidCallOfCommandException(exception.getMessage());
-        } */
     }
 
     @Override

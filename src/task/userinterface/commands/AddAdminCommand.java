@@ -4,8 +4,9 @@ import task.constructs.program.Argument;
 import task.constructs.program.CommandSignature;
 import task.exceptions.AuthException;
 import task.exceptions.InvalidCallOfCommandException;
+import task.exceptions.ParserException;
 import task.exceptions.ValidationException;
-import task.olympia.validation.OlympiaValidator;
+import task.userinterface.models.UserGroup;
 import task.interfaces.ICommand;
 import task.interfaces.IExecutableCommand;
 import task.userinterface.CLI;
@@ -16,6 +17,7 @@ import static task.userinterface.models.UserGroup.ADMIN;
 
 public class AddAdminCommand implements IExecutableCommand {
     private CLI userInterface;
+    private UserGroup[] allowedUserGroups = {ADMIN};
     private CommandSignature commandSignature = new CommandSignature(
             "add-admin",
             new Argument("firstname", STRING),
@@ -31,10 +33,9 @@ public class AddAdminCommand implements IExecutableCommand {
     @Override
     public void tryToExecute(ICommand command, StringBuilder outputStream) throws InvalidCallOfCommandException {
         try {
-            // Check the passed command against the signature it should have
-            OlympiaValidator.validateCommand(command, this.commandSignature);
+            this.userInterface.getInputValidator().validateCommand(command, this.commandSignature);
 
-            User newUser = new User(ADMIN, command.getArgs());
+            User newUser = userInterface.getUiParser().parseUser(ADMIN, command.getArgs());
             this.userInterface.registerUser(newUser);
 
             outputStream.append("OK");
@@ -44,8 +45,8 @@ public class AddAdminCommand implements IExecutableCommand {
                     this.commandSignature.getCommandSignature(),
                     validationException.getMessage()
             );
-        } catch (AuthException authException) {
-            throw new InvalidCallOfCommandException(authException.getMessage());
+        } catch (ParserException | AuthException exception) {
+            throw new InvalidCallOfCommandException(exception.getMessage());
         }
     }
 

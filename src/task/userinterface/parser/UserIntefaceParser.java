@@ -1,13 +1,14 @@
-package task.olympia.parser;
+package task.userinterface.parser;
 
 import task.exceptions.ParserException;
-import task.olympia.parser.types.CommandParser;
 import task.interfaces.ICommand;
+import task.userinterface.parser.types.CommandParser;
+import task.userinterface.models.User;
+import task.userinterface.models.UserGroup;
+import task.userinterface.parser.types.UserParser;
 
-/**
- * Holds instances of the parsers that belong to the olympia and passes the data to them.
- */
-public class OlympiaParser {
+public class UserIntefaceParser {
+    private UserParser userParser = new UserParser();
     private CommandParser commandParser = new CommandParser();
 
     /**
@@ -28,5 +29,15 @@ public class OlympiaParser {
      */
     public ICommand parseCommand(String[] inputArray) throws ParserException {
         return commandParser.parse(inputArray);
+    }
+
+    public User parseUser(String... args) throws ParserException {
+        return userParser.parse(args);
+    }
+
+    public User parseUser(UserGroup userGroup, String... args) throws ParserException {
+        User user = parseUser(args);
+        user.setUserGroup(userGroup);
+        return user;
     }
 }

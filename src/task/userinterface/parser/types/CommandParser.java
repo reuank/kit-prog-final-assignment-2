@@ -1,4 +1,4 @@
-package task.olympia.parser.types;
+package task.userinterface.parser.types;
 
 import task.constructs.program.Command;
 import task.exceptions.ParserException;

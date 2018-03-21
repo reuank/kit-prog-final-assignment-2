@@ -94,7 +94,7 @@ public class StringArrayValidation {
                 return this;
             }
 
-            return addError(String.format(Message.get(HAS_LENGTH_$INT$_INSTEAD_OF_$INT$), 0, length));
+            return addError(Message.get(HAS_LENGTH_$INT$_INSTEAD_OF_$INT$, 0, length));
         } else if (this.validateMe.length != length ) {
             return addError(Message.get(HAS_LENGTH_$INT$_INSTEAD_OF_$INT$, this.validateMe.length, length));
         }

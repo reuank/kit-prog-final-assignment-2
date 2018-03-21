@@ -22,22 +22,14 @@ public class AccountManager {
     }
 
     public void tryLogin(String username, String password) throws AuthException {
-        if (this.session.isLoggedIn()) {
-            throw new AuthException(Message.get(ALREADY_LOGGED_IN));
-        }
-
         if (!ldap.checkCredentials(username, password)) {
             throw new AuthException(Message.get(WRONG_CREDENTIALS));
         }
 
-        this.session = new Session(getUser(username));
+        this.session.start(getUser(username));
     }
 
-    public void tryLogout() throws AuthException {
-        if (!this.session.isLoggedIn()) {
-            throw new AuthException(Message.get(NOT_LOGGED_IN));
-        }
-
+    public void logout() {
         this.session.reset();
     }
 

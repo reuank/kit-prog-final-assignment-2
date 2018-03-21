@@ -1,14 +1,11 @@
 package task.constructs.database;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Database {
-    private String name;
     private HashMap<Class, Table<? extends Model>> tables;
 
-    public Database(String name) {
-        this.name = name;
+    public Database() {
         this.tables = new HashMap<>();
     }
 

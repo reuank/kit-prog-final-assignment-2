@@ -5,13 +5,15 @@ import task.constructs.database.Table;
 import task.olympia.OlympiaApplication;
 import task.olympia.commands.*;
 import task.olympia.models.*;
-import task.olympia.parser.OlympiaParser;
+import task.olympia.parser.AppParser;
 import task.userinterface.CLI;
 import task.userinterface.commands.AddAdminCommand;
 import task.userinterface.commands.LoginAdminCommand;
 import task.userinterface.commands.LogoutAdminCommand;
 import task.userinterface.commands.QuitCommand;
 import task.userinterface.models.User;
+import task.userinterface.parser.UserIntefaceParser;
+import task.userinterface.validation.InputValidator;
 
 /**
  * @author Leon Knauer
@@ -49,12 +51,12 @@ public class Main {
     public static void main(String[] args) {
 
         /* ------------- SETUP USER INTERFACE ------------- */
-        Database userDatabase = new Database("User");
+        Database userDatabase = new Database();
         userDatabase.createTable(
                 new Table<>(User.class)
         );
 
-        CLI userInterface = new CLI(new OlympiaParser(), userDatabase);
+        CLI userInterface = new CLI(new UserIntefaceParser(), new InputValidator(), userDatabase);
 
         userInterface.registerCommands(
                 new AddAdminCommand(userInterface),
@@ -64,7 +66,7 @@ public class Main {
         );
 
         /* ------------- SETUP APPLICATION ------------- */
-        Database olympiaDatabase = new Database("Olympia");
+        Database olympiaDatabase = new Database();
         olympiaDatabase.createTables(
                 new Table<>(Athlete.class),
                 new Table<>(Competition.class),
@@ -74,7 +76,12 @@ public class Main {
                 new Table<>(SportType.class)
         );
 
-        OlympiaApplication app = new OlympiaApplication(olympiaDatabase);
+        OlympiaApplication app = new OlympiaApplication(
+                new AppParser(),
+                olympiaDatabase,
+                userInterface.getInputValidator(),
+                userInterface.getSession()
+        );
 
         userInterface.registerCommands(
                 new AddAthleteCommand(app),

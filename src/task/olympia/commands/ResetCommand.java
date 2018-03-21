@@ -1,15 +1,22 @@
 package task.olympia.commands;
 
 import task.constructs.program.CommandSignature;
+import task.exceptions.AuthException;
 import task.exceptions.InvalidCallOfCommandException;
 import task.exceptions.ValidationException;
+import task.interfaces.IRestrictedCommand;
 import task.olympia.OlympiaApplication;
-import task.olympia.validation.OlympiaValidator;
+import task.userinterface.auth.Permission;
+import task.userinterface.validation.InputValidator;
 import task.interfaces.ICommand;
 import task.interfaces.IExecutableCommand;
 
-public class ResetCommand implements IExecutableCommand {
+import static task.userinterface.auth.Permission.MUST_BE_ADMIN;
+import static task.userinterface.auth.Permission.MUST_BE_LOGGED_IN;
+
+public class ResetCommand implements IExecutableCommand, IRestrictedCommand {
     private OlympiaApplication app;
+    private Permission[] requiredPermissions = new Permission[]{MUST_BE_LOGGED_IN, MUST_BE_ADMIN};
     private CommandSignature commandSignature = new CommandSignature("reset");
 
     public ResetCommand(OlympiaApplication app) {
@@ -17,11 +24,18 @@ public class ResetCommand implements IExecutableCommand {
     }
 
     @Override
+    public Permission[] getPermissionFlags() {
+        return this.requiredPermissions;
+    }
+
+    @Override
     public void tryToExecute(ICommand command, StringBuilder outputStream) throws InvalidCallOfCommandException {
         try {
-            OlympiaValidator.validateCommand(command, this.commandSignature);
+            this.checkPermissions(this.app.getSession());
 
-            //this.olympia.reset();
+            this.app.getInputValidator().validateCommand(command, this.commandSignature);
+
+            this.app.reset();
 
             outputStream.append("OK");
         } catch (ValidationException validationException) {
@@ -30,6 +44,8 @@ public class ResetCommand implements IExecutableCommand {
                     this.commandSignature.getCommandSignature(),
                     validationException.getMessage()
             );
+        } catch (AuthException authException) {
+            throw new InvalidCallOfCommandException(authException.getMessage());
         }
     }
 

@@ -1,4 +1,4 @@
-package task.olympia.validation.types;
+package task.userinterface.validation.types;
 
 import task.constructs.program.CommandSignature;
 import task.exceptions.ValidationException;

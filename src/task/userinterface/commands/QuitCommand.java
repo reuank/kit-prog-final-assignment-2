@@ -3,7 +3,7 @@ package task.userinterface.commands;
 import task.constructs.program.CommandSignature;
 import task.exceptions.InvalidCallOfCommandException;
 import task.exceptions.ValidationException;
-import task.olympia.validation.OlympiaValidator;
+import task.userinterface.validation.InputValidator;
 import task.interfaces.ICommand;
 import task.interfaces.IExecutableCommand;
 import task.userinterface.CLI;
@@ -26,7 +26,7 @@ public class QuitCommand implements IExecutableCommand {
     @Override
     public void tryToExecute(ICommand command, StringBuilder outputStream) throws InvalidCallOfCommandException {
         try {
-            OlympiaValidator.validateCommand(command, this.commandSignature);
+            this.userInterface.getInputValidator().validateCommand(command, this.commandSignature);
 
             userInterface.stop();
         } catch (ValidationException validationException) {

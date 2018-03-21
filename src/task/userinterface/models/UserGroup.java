@@ -2,9 +2,9 @@ package task.userinterface.models;
 
 public enum UserGroup {
     ADMIN,
-    WORLD;
+    GUEST;
 
     public static UserGroup getDefault() {
-        return WORLD;
+        return GUEST;
     }
 }

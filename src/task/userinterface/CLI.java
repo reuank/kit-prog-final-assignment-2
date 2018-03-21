@@ -6,21 +6,16 @@ import task.exceptions.AuthException;
 import task.exceptions.CommandUndefinedException;
 import task.exceptions.InvalidCallOfCommandException;
 import task.exceptions.ParserException;
-import task.interfaces.IUser;
-import task.lang.Message;
-import task.olympia.parser.OlympiaParser;
 import task.interfaces.ICommand;
 import task.interfaces.IExecutableCommand;
 import task.interfaces.IUserInterface;
 import task.userinterface.auth.AccountManager;
-import task.userinterface.auth.LDAP;
 import task.userinterface.auth.Session;
 import task.userinterface.models.User;
+import task.userinterface.parser.UserIntefaceParser;
+import task.userinterface.validation.InputValidator;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-
-import static task.lang.Message.ALREADY_LOGGED_IN;
 
 /**
  * The Command Line Interface used for handling all user interactions and outputs.
@@ -28,7 +23,8 @@ import static task.lang.Message.ALREADY_LOGGED_IN;
  * and the errors will be printed on the command line.
  */
 public class CLI implements IUserInterface {
-    private OlympiaParser parser;
+    private UserIntefaceParser uiParser;
+    private InputValidator inputValidator;
     private Database userDatabase;
     private HashMap<String, IExecutableCommand> commandRegister;
     private boolean isRunning;
@@ -37,10 +33,11 @@ public class CLI implements IUserInterface {
 
     /**
      * Creates a new Command Line Interface.
-     * @param parser The injected parser that shall be used by the interface.
+     * @param uiParser The injected parser that shall be used by the interface.
      */
-    public CLI(OlympiaParser parser, Database userDatabase) {
-        this.parser = parser;
+    public CLI(UserIntefaceParser uiParser, InputValidator inputValidator, Database userDatabase) {
+        this.uiParser = uiParser;
+        this.inputValidator = inputValidator;
         this.userDatabase = userDatabase;
         this.commandRegister = new HashMap<>();
         this.session = new Session();
@@ -68,7 +65,7 @@ public class CLI implements IUserInterface {
 
         while (this.isRunning) {
             try {
-                ICommand inputCommand = this.parser.parseCommand(input());
+                ICommand inputCommand = this.uiParser.parseCommand(input());
                 process(inputCommand);
             } catch (ParserException | InvalidCallOfCommandException exception) {
                 this.outputError(exception.getMessage());
@@ -94,8 +91,12 @@ public class CLI implements IUserInterface {
         this.accountManager.tryLogin(username, password);
     }
 
-    public void logout() throws AuthException {
-        this.accountManager.tryLogout();
+    public void logout() {
+        this.accountManager.logout();
+    }
+
+    public boolean isLoggedIn() {
+        return this.session.exists();
     }
 
     /**
@@ -130,16 +131,21 @@ public class CLI implements IUserInterface {
         return this.commandRegister.containsKey(command.getSlug());
     }
 
+
+    public InputValidator getInputValidator() {
+        return this.inputValidator;
+    }
+
     /**
      * Returns the parser that belongs to the Interface.
      * @return The parser of this interface.
      */
-    public OlympiaParser getParser() {
-        return this.parser;
+    public UserIntefaceParser getUiParser() {
+        return this.uiParser;
     }
 
     public Session getSession() {
-        return session;
+        return this.session;
     }
 
     /**

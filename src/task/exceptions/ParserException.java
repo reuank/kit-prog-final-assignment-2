@@ -12,4 +12,8 @@ public class ParserException extends Exception {
     public ParserException(String paramName, String exception) {
         super(String.format("the %s could not be parsed because %s", paramName, exception));
     }
+
+    public ParserException(String exception) {
+        super(exception);
+    }
 }

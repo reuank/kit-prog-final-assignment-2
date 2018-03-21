@@ -39,11 +39,11 @@ public class IocCode extends Model {
         this.countryName = countryName;
     }
 
-    public int getDeterminationYear() {
+    public int getYear() {
         return determinationYear;
     }
 
-    public void setDeterminationYear(int determinationYear) {
+    public void setYear(int determinationYear) {
         this.determinationYear = determinationYear;
     }
 }

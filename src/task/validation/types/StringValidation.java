@@ -4,6 +4,9 @@ import task.constructs.program.ValidationResult;
 import task.exceptions.ValidationException;
 import task.lang.Message;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import static task.lang.Message.*;
 
 /**
@@ -65,6 +68,44 @@ public class StringValidation {
         return this;
     }
 
+
+    public StringValidation isOfLength(int length) {
+        if (this.validateMe == null && length == 0) {
+            return this;
+        }
+
+        if (this.validateMe.length() != length) {
+            return addError(Message.get(SHOULD_HAVE_LENGTH_$INT$, length));
+        }
+
+        return this;
+    }
+
+
+    public StringValidation matches(String regex) {
+        if (this.validateMe == null && regex == null) {
+            return this;
+        }
+
+        if (!this.validateMe.matches(regex)) {
+            return addError(Message.get(INPUT_NOT_MATCHES_REQUIREMENTS));
+        }
+
+        return this;
+    }
+
+    public StringValidation isOnlyLetters() {
+        if (!this.validateMe.matches("[a-zA-Z]+")) {
+            return addError(Message.get(SHOULD_ONLY_CONTAIN_LETTERS));
+        }
+
+        return this;
+    }
+
+    public String getValidateMe() {
+        return validateMe;
+    }
+
     /**
      * Checks whether the String contains a String value. Adds an error if necessary.
      * @param needle The String that shall be searched for.
@@ -105,17 +146,15 @@ public class StringValidation {
      * @return Returns the current Validation object, so that other validation can be applied.
      */
     public StringValidation isInSet(String[] set) {
-        StringBuilder setRepresentation = new StringBuilder();
         for (int i = 0; i < set.length; i++) {
-            setRepresentation.append(String.format("\"%s\"", set[i]));
-            setRepresentation.append(i < set.length - 1 ? " or " : "");
-
             if (set[i].equals(validateMe)) {
                 return this;
             }
         }
 
-        return addError(String.format("should be either %s", setRepresentation.toString()));
+        String setRepresentation = Arrays.stream(set).collect(Collectors.joining(" " + Message.get(OR) + " "));
+
+        return addError(Message.get(SHOULD_BE_EITHER, setRepresentation));
     }
 
     /**

@@ -1,39 +1,32 @@
 package task.userinterface.auth;
 
-import task.interfaces.IUser;
+import task.userinterface.models.User;
 import task.userinterface.models.UserGroup;
 
 public class Session {
-    IUser user;
-    UserGroup group;
+    User user;
 
     public Session() {
-        this.group = UserGroup.getDefault();
+
     }
 
-    public Session(IUser user) {
+    public Session(User user) {
         this.user = user;
-        this.group = user.getUserGroup();
     }
 
-    public IUser getUser() {
+    public User getUser() {
         return user;
     }
 
-    public boolean isLoggedIn() {
-        return this.user != null;
-    }
-
-    public UserGroup getGroup() {
-        return this.group;
-    }
-
-    public void setUser(IUser user) {
+    public void start(User user) {
         this.user = user;
+    }
+
+    public boolean exists() {
+        return this.user != null;
     }
 
     public void reset() {
         this.user = null;
-        this.group = UserGroup.getDefault();
     }
 }

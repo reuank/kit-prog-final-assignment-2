@@ -6,14 +6,20 @@ import task.exceptions.InvalidCallOfCommandException;
 import task.exceptions.ValidationException;
 import task.interfaces.ICommand;
 import task.interfaces.IExecutableCommand;
-import task.olympia.validation.OlympiaValidator;
+import task.interfaces.IRestrictedCommand;
+import task.userinterface.auth.Permission;
+import task.userinterface.validation.InputValidator;
 import task.userinterface.CLI;
+
+import static task.userinterface.auth.Permission.MUST_BE_ADMIN;
+import static task.userinterface.auth.Permission.MUST_BE_LOGGED_IN;
 
 /**
  *
  */
-public class LogoutAdminCommand implements IExecutableCommand {
+public class LogoutAdminCommand implements IExecutableCommand, IRestrictedCommand {
     private CLI userInterface;
+    private Permission[] requiredPermissions = new Permission[]{MUST_BE_LOGGED_IN, MUST_BE_ADMIN};
     private CommandSignature commandSignature = new CommandSignature("logout-admin");
 
     /**
@@ -25,9 +31,16 @@ public class LogoutAdminCommand implements IExecutableCommand {
     }
 
     @Override
+    public Permission[] getPermissionFlags() {
+        return this.requiredPermissions;
+    }
+
+    @Override
     public void tryToExecute(ICommand command, StringBuilder outputStream) throws InvalidCallOfCommandException {
         try {
-            OlympiaValidator.validateCommand(command, this.commandSignature);
+            this.checkPermissions(userInterface.getSession());
+
+            this.userInterface.getInputValidator().validateCommand(command, this.commandSignature);
 
             this.userInterface.logout();
 

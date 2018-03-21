@@ -5,6 +5,7 @@ import task.constructs.database.Model;
 public class SportsVenue extends Model {
     private int id;
     private IocCode iocCode;
+    private String countryName;
     private String location;
     private String name;
     private int openingYear;
@@ -13,6 +14,15 @@ public class SportsVenue extends Model {
     public SportsVenue(int id, IocCode iocCode, String location, String name, int openingYear, int seatcount) {
         this.id = id;
         this.iocCode = iocCode;
+        this.location = location;
+        this.name = name;
+        this.openingYear = openingYear;
+        this.seatcount = seatcount;
+    }
+
+    public SportsVenue(int id, String countryName, String location, String name, int openingYear, int seatcount) {
+        this.id = id;
+        this.countryName = countryName;
         this.location = location;
         this.name = name;
         this.openingYear = openingYear;
@@ -33,6 +43,10 @@ public class SportsVenue extends Model {
 
     public void setIocCode(IocCode iocCode) {
         this.iocCode = iocCode;
+    }
+
+    public String getCountryName() {
+        return countryName;
     }
 
     public String getLocation() {
