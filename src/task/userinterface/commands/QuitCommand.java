@@ -8,6 +8,8 @@ import task.interfaces.ICommand;
 import task.interfaces.IExecutableCommand;
 import task.userinterface.CLI;
 
+import java.util.List;
+
 /**
  *
  */
@@ -24,7 +26,7 @@ public class QuitCommand implements IExecutableCommand {
     }
 
     @Override
-    public void tryToExecute(ICommand command, StringBuilder outputStream) throws InvalidCallOfCommandException {
+    public void tryToExecute(ICommand command, List<String> outputStream) throws InvalidCallOfCommandException {
         try {
             this.userInterface.getInputValidator().validateCommand(command, this.commandSignature);
 

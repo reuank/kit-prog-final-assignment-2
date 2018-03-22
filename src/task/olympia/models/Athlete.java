@@ -17,6 +17,11 @@ public class Athlete extends Model {
         this.sportDisciplines = sportDisciplines;
     }
 
+    @Override
+    public boolean equals(Object other) {
+        return ((Athlete) other).id == this.id;
+    }
+
     public int getId() {
         return this.id;
     }

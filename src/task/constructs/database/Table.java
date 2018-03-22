@@ -25,6 +25,10 @@ public class Table<T extends Model> {
         this.rows.add(item);
     }
 
+    public boolean isEmpty() {
+        return this.rows.isEmpty();
+    }
+
     public boolean anyMatch(Predicate<T> predicate) {
         return this.rows.stream().anyMatch(predicate);
     }

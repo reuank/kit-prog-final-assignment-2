@@ -11,6 +11,8 @@ import task.userinterface.validation.InputValidator;
 import task.interfaces.ICommand;
 import task.interfaces.IExecutableCommand;
 
+import java.util.List;
+
 import static task.userinterface.auth.Permission.MUST_BE_ADMIN;
 import static task.userinterface.auth.Permission.MUST_BE_LOGGED_IN;
 
@@ -29,7 +31,7 @@ public class ResetCommand implements IExecutableCommand, IRestrictedCommand {
     }
 
     @Override
-    public void tryToExecute(ICommand command, StringBuilder outputStream) throws InvalidCallOfCommandException {
+    public void tryToExecute(ICommand command, List<String> outputStream) throws InvalidCallOfCommandException {
         try {
             this.checkPermissions(this.app.getSession());
 
@@ -37,7 +39,7 @@ public class ResetCommand implements IExecutableCommand, IRestrictedCommand {
 
             this.app.reset();
 
-            outputStream.append("OK");
+            outputStream.add("OK");
         } catch (ValidationException validationException) {
             throw new InvalidCallOfCommandException(
                     command.getSlug(),

@@ -29,6 +29,11 @@ public class SportsVenue extends Model {
         this.seatcount = seatcount;
     }
 
+    @Override
+    public boolean equals(Object other) {
+        return ((SportsVenue) other).getId() == this.id;
+    }
+
     public int getId() {
         return id;
     }

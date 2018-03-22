@@ -12,6 +12,8 @@ import task.interfaces.IExecutableCommand;
 import task.userinterface.CLI;
 import task.userinterface.models.User;
 
+import java.util.List;
+
 import static task.constructs.program.Datatype.STRING;
 import static task.userinterface.models.UserGroup.ADMIN;
 
@@ -31,14 +33,14 @@ public class AddAdminCommand implements IExecutableCommand {
     }
 
     @Override
-    public void tryToExecute(ICommand command, StringBuilder outputStream) throws InvalidCallOfCommandException {
+    public void tryToExecute(ICommand command, List<String> outputStream) throws InvalidCallOfCommandException {
         try {
             this.userInterface.getInputValidator().validateCommand(command, this.commandSignature);
 
             User newUser = userInterface.getUiParser().parseUser(ADMIN, command.getArgs());
             this.userInterface.registerUser(newUser);
 
-            outputStream.append("OK");
+            outputStream.add("OK");
         } catch (ValidationException validationException) {
             throw new InvalidCallOfCommandException(
                     command.getSlug(),

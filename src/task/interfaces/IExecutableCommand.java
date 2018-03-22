@@ -2,6 +2,8 @@ package task.interfaces;
 
 import task.exceptions.InvalidCallOfCommandException;
 
+import java.util.List;
+
 /**
  * An interface for executable commands.
  */
@@ -12,5 +14,5 @@ public interface IExecutableCommand extends ICommand {
      * @param output The place where all the output of the command - except errors - goes.
      * @throws InvalidCallOfCommandException Thrown if any errors occur during the execution of the command.
      */
-    void tryToExecute(ICommand command, StringBuilder output) throws InvalidCallOfCommandException;
+    void tryToExecute(ICommand command, List<String> output) throws InvalidCallOfCommandException;
 }

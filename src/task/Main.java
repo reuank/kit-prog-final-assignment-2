@@ -6,6 +6,7 @@ import task.olympia.OlympiaApplication;
 import task.olympia.commands.*;
 import task.olympia.models.*;
 import task.olympia.parser.AppParser;
+import task.olympia.serializers.AppSerializer;
 import task.userinterface.CLI;
 import task.userinterface.commands.AddAdminCommand;
 import task.userinterface.commands.LoginAdminCommand;
@@ -77,8 +78,9 @@ public class Main {
         );
 
         OlympiaApplication app = new OlympiaApplication(
-                new AppParser(),
                 olympiaDatabase,
+                new AppParser(),
+                new AppSerializer(),
                 userInterface.getInputValidator(),
                 userInterface.getSession()
         );

@@ -3,22 +3,17 @@ package task.olympia.models;
 import task.constructs.database.Model;
 
 public class SportDiscipline extends Model {
-    private int id;
     private SportType sportType;
     private String name;
 
-    public SportDiscipline(int id, SportType sportType, String name) {
-        this.id = id;
-        this.sportType = sportType;
+    public SportDiscipline(String name) {
         this.name = name;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    @Override
+    public boolean equals(Object other) {
+        return ((SportDiscipline) other).getName().equals(this.getName())
+                && ((SportDiscipline) other).getSportType().equals(this.sportType);
     }
 
     public SportType getSportType() {

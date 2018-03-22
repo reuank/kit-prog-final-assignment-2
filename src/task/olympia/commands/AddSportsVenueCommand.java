@@ -11,6 +11,8 @@ import task.userinterface.validation.InputValidator;
 import task.interfaces.ICommand;
 import task.interfaces.IExecutableCommand;
 
+import java.util.List;
+
 import static task.constructs.program.Datatype.INT;
 import static task.constructs.program.Datatype.STRING;
 import static task.userinterface.auth.Permission.MUST_BE_ADMIN;
@@ -39,7 +41,7 @@ public class AddSportsVenueCommand implements IExecutableCommand, IRestrictedCom
     }
 
     @Override
-    public void tryToExecute(ICommand command, StringBuilder outputStream) throws InvalidCallOfCommandException {
+    public void tryToExecute(ICommand command, List<String> outputStream) throws InvalidCallOfCommandException {
         try {
             this.checkPermissions(this.app.getSession());
 
@@ -48,7 +50,7 @@ public class AddSportsVenueCommand implements IExecutableCommand, IRestrictedCom
             SportsVenue sportsVenue = this.app.getParser().parseSportsVenue(command.getArgs());
             this.app.addSportsVenue(sportsVenue);
 
-            outputStream.append("OK");
+            outputStream.add("OK");
         } catch (ValidationException validationException) {
             throw new InvalidCallOfCommandException(
                     command.getSlug(),

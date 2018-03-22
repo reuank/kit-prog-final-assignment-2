@@ -6,10 +6,13 @@ import task.exceptions.InvalidCallOfCommandException;
 import task.exceptions.ValidationException;
 import task.interfaces.IRestrictedCommand;
 import task.olympia.OlympiaApplication;
+import task.olympia.models.IocCode;
 import task.userinterface.auth.Permission;
 import task.userinterface.validation.InputValidator;
 import task.interfaces.ICommand;
 import task.interfaces.IExecutableCommand;
+
+import java.util.List;
 
 import static task.userinterface.auth.Permission.MUST_BE_ADMIN;
 import static task.userinterface.auth.Permission.MUST_BE_LOGGED_IN;
@@ -29,13 +32,16 @@ public class ListIocCodesCommand implements IExecutableCommand, IRestrictedComma
     }
 
     @Override
-    public void tryToExecute(ICommand command, StringBuilder outputStream) throws InvalidCallOfCommandException {
+    public void tryToExecute(ICommand command, List<String> outputStream) throws InvalidCallOfCommandException {
         try {
             this.checkPermissions(this.app.getSession());
 
             this.app.getInputValidator().validateCommand(command, this.commandSignature);
 
-            outputStream.append("OK");
+            List<IocCode> iocCodeList = this.app.getIocCodesSorted();
+            List<String> serializedList = this.app.getSerializer().serializeIocCodes(iocCodeList);
+
+            outputStream.addAll(serializedList);
         } catch (ValidationException validationException) {
             throw new InvalidCallOfCommandException(
                     command.getSlug(),

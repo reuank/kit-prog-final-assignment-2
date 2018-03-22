@@ -15,7 +15,10 @@ import task.userinterface.models.User;
 import task.userinterface.parser.UserIntefaceParser;
 import task.userinterface.validation.InputValidator;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The Command Line Interface used for handling all user interactions and outputs.
@@ -112,7 +115,7 @@ public class CLI implements IUserInterface {
 
             // Pass the passed command over to the corresponding executable command
             // for further validation and final execution.
-            StringBuilder outputStream = new StringBuilder();
+            List<String> outputStream = new ArrayList<>();
             correspondingCommand.tryToExecute(passedCommand, outputStream);
 
             // Show all messages that have been generated within the command
@@ -152,9 +155,9 @@ public class CLI implements IUserInterface {
      * Used for displaying all the messages that have been generated within a command.
      * @param outputStream The output stream that has been passed to the command before.
      */
-    private void flushOutput(StringBuilder outputStream) {
-        if (!outputStream.toString().equals("")) {
-            output(outputStream.toString());
+    private void flushOutput(List<String> outputStream) {
+        if (!outputStream.isEmpty()) {
+            output(outputStream.stream().collect(Collectors.joining("\n")));
         }
     }
 

@@ -12,6 +12,8 @@ import task.userinterface.auth.Permission;
 import task.userinterface.validation.InputValidator;
 import task.userinterface.CLI;
 
+import java.util.List;
+
 import static task.constructs.program.Datatype.STRING;
 import static task.userinterface.auth.Permission.MUST_BE_LOGGED_OUT;
 
@@ -41,7 +43,7 @@ public class LoginAdminCommand implements IExecutableCommand, IRestrictedCommand
     }
 
     @Override
-    public void tryToExecute(ICommand command, StringBuilder outputStream) throws InvalidCallOfCommandException {
+    public void tryToExecute(ICommand command, List<String> outputStream) throws InvalidCallOfCommandException {
         try {
             this.checkPermissions(this.userInterface.getSession());
 
@@ -52,7 +54,7 @@ public class LoginAdminCommand implements IExecutableCommand, IRestrictedCommand
 
             this.userInterface.login(username, password);
 
-            outputStream.append("OK");
+            outputStream.add("OK");
         } catch (ValidationException validationException) {
             throw new InvalidCallOfCommandException(
                     command.getSlug(),

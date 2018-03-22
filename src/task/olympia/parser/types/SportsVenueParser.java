@@ -30,13 +30,12 @@ public class SportsVenueParser implements IParser {
 
             int venueIdInt = SyntaxValidator.validateInt(venueId)
                     .isPositive()
-                    .isInRange(0, 999)
+                    .isInRange(1, 999)
                     .throwIfInvalid("the sports venue id")
                     .getResult();
 
             SyntaxValidator.validateString(countryName)
                     .isNotNull()
-                    .isOnlyLetters()
                     .throwIfInvalid("the sports venue name");
 
             SyntaxValidator.validateString(location)

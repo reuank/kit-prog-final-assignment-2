@@ -22,12 +22,15 @@ public enum Message {
     IS_NOT_AN_INTEGER ("is not an integer"),
     INPUT_NOT_MATCHES_REQUIREMENTS ("does not match the requirements"),
     SHOULD_ONLY_CONTAIN_LETTERS ("should only contain letters"),
-    NOT_UNIQUE ("there is already an entry with the same %s"),
-    NOT_EXISTANT ("the given %s is not present in the database"),
+    ALREADY_EXISTS("this %s already exists"),
+    NOT_EXISTENT("the given %s is not present in the database"),
     NUMBER ("number"),
     ADMIN ("administrator"),
     OR ("or"),
-    AND ("and");
+    AND ("and"),
+
+    IOC_CODE_YOUNGER_ERROR ("the corresponding ioc code was created after this year")
+    ;
 
     private String message;
 

@@ -2,6 +2,8 @@ package task.olympia.models;
 
 import task.constructs.database.Model;
 
+import java.util.Comparator;
+
 public class Competition extends Model {
     private Athlete athlete;
     private int year;
@@ -15,6 +17,12 @@ public class Competition extends Model {
         this.iocCode = iocCode;
         this.sportDiscipline = sportDiscipline;
         this.medalCode = medalCode;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return ((Competition) other).athlete.equals(this.athlete)
+                && ((Competition) other).getYear() == this.year;
     }
 
     public Athlete getAthlete() {

@@ -7,10 +7,12 @@ import task.exceptions.InvalidCallOfCommandException;
 import task.exceptions.ValidationException;
 import task.interfaces.IRestrictedCommand;
 import task.olympia.OlympiaApplication;
+import task.olympia.models.SportsVenue;
 import task.userinterface.auth.Permission;
-import task.userinterface.validation.InputValidator;
 import task.interfaces.ICommand;
 import task.interfaces.IExecutableCommand;
+
+import java.util.List;
 
 import static task.constructs.program.Datatype.STRING;
 import static task.userinterface.auth.Permission.MUST_BE_ADMIN;
@@ -34,13 +36,16 @@ public class ListSportsVenuesCommand implements IExecutableCommand, IRestrictedC
     }
 
     @Override
-    public void tryToExecute(ICommand command, StringBuilder outputStream) throws InvalidCallOfCommandException {
+    public void tryToExecute(ICommand command, List<String> outputStream) throws InvalidCallOfCommandException {
         try {
             this.checkPermissions(this.app.getSession());
 
             this.app.getInputValidator().validateCommand(command, this.commandSignature);
 
-            outputStream.append("OK");
+            List<SportsVenue> sportsVenueList = this.app.getSportsVenuesSorted(command.getArg(0));
+            List<String> serializedList = this.app.getSerializer().serializeSportsVenues(sportsVenueList);
+
+            outputStream.addAll(serializedList);
         } catch (ValidationException validationException) {
             throw new InvalidCallOfCommandException(
                     command.getSlug(),

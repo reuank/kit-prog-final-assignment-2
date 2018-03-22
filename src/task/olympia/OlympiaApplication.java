@@ -7,30 +7,31 @@ import task.olympia.models.*;
 import task.olympia.operations.Inserter;
 import task.olympia.operations.Selector;
 import task.olympia.parser.AppParser;
+import task.olympia.serializers.AppSerializer;
 import task.userinterface.auth.Session;
 import task.userinterface.validation.InputValidator;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class OlympiaApplication {
     private AppParser appParser;
     private Database database;
+    private AppSerializer appSerializer;
     private InputValidator inputValidator;
     private Session session;
 
-    private Inserter inserter;
     private Selector selector;
+    private Inserter inserter;
 
-    public OlympiaApplication(AppParser appParser, Database database, InputValidator inputValidator, Session session) {
-        this.appParser = appParser;
-        this.database = database;
-        this.inputValidator = inputValidator;
+    public OlympiaApplication(Database db, AppParser parser, AppSerializer serializer, InputValidator validator, Session session) {
+        this.appParser = parser;
+        this.database = db;
+        this.appSerializer = serializer;
+        this.inputValidator = validator;
         this.session = session;
 
-        this.inserter = new Inserter(this);
         this.selector = new Selector(this);
+        this.inserter = new Inserter(this, this.selector);
     }
 
     public AppParser getParser() {
@@ -39,6 +40,10 @@ public class OlympiaApplication {
 
     public Database getDatabase() {
         return database;
+    }
+
+    public AppSerializer getSerializer() {
+        return appSerializer;
     }
 
     public void setDatabase(Database database) {
@@ -53,6 +58,7 @@ public class OlympiaApplication {
         return session;
     }
 
+    /* ------------- ADDING DATA ------------- */
     public boolean addIocCode(IocCode iocCode) throws DatabaseException {
         return this.inserter.addIocCode(iocCode);
     }
@@ -61,12 +67,26 @@ public class OlympiaApplication {
        return this.inserter.addSportsVenue(sportsVenue);
     }
 
+    public boolean addOlympicSport(SportType sportType, SportDiscipline sportDiscipline) throws DatabaseException {
+        return this.inserter.addOlympicSport(sportType, sportDiscipline);
+    }
+
+
+    /* ------------- GETTING DATA ------------- */
     public IocCode getIocCode(String countryName) {
         return this.selector.getIocCode(countryName);
     }
 
-    public List<IocCode> getIocCodes() {
-        return this.selector.getIocCodes();
+    public List<IocCode> getIocCodesSorted() {
+        return this.selector.getIocCodesSorted();
+    }
+
+    public List<SportsVenue> getSportsVenuesSorted(String countryName) {
+        return this.selector.getSportsVenuesSorted(countryName);
+    }
+
+    public List<SportDiscipline> getOlympicSportsSorted() {
+        return this.selector.getOlympicSportsSorted();
     }
 
     public void reset() {
