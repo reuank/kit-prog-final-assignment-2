@@ -30,8 +30,8 @@ public class Inserter {
         athlete.setIocCode(matchingIocCode);
 
         if (matchingAthlete != null) {
-            if (!matchingAthlete.getIocCode().equals(athlete.getIocCode())) {
-                throw new DatabaseException(Message.get("this athlete has another ioc code"));
+            if (!athlete.equals(matchingAthlete)) {
+                throw new DatabaseException(Message.get("this athlete has exists but holds other data"));
             }
 
             if (matchingAthlete.practicesOlympicSport(matchingOlympicSport)) {
@@ -55,7 +55,6 @@ public class Inserter {
     }
 
     public boolean insertCompetition(Competition competition) throws DatabaseException {
-        //Todo add athlete olympic sport sensitivity
         Athlete matchingAthlete = this.selector.getAthleteById(competition.getAthlete().getId());
         this.requireHard(matchingAthlete, "athlete");
         competition.setAthlete(matchingAthlete);
@@ -70,14 +69,13 @@ public class Inserter {
 
         OlympicSport matchingOlympicSport = this.selector.getOlympicSport(competition.getOlympicSport());
         this.requireHard(matchingOlympicSport, "olympic sport");
+        competition.setOlympicSport(matchingOlympicSport);
+
         if (!matchingAthlete.practicesOlympicSport(matchingOlympicSport)) {
             throw new DatabaseException("this athlete does not practice this olympic sport");
         }
 
-        competition.setOlympicSport(matchingOlympicSport);
-
         this.uniqueInsert(Competition.class, competition, "competition");
-        matchingAthlete.assignCompetition(competition);
 
         return true;
     }

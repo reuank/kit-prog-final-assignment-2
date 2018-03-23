@@ -76,11 +76,19 @@ public class Competition extends Model {
         return this.medal != Medal.NONE;
     }
 
+    public int getMedalValue() {
+        return this.wasWon() ? 1 : 0;
+    }
+
     public Medal getMedal() {
         return medal;
     }
 
     public void setMedal(Medal medal) {
         this.medal = medal;
+    }
+
+    public int getAthleteId() {
+        return getAthlete().getId();
     }
 }

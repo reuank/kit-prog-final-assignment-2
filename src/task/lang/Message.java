@@ -1,32 +1,12 @@
 package task.lang;
 
 public enum Message {
-
-    /* */
-    /**
-     * The already logged in message
-     */
     ALREADY_LOGGED_IN ("you are already logged in"),
-
-    /**
-     * The
-     */
     GROUP_$STRING$_REQUIRED ("you have to be an %s"),
-
-    /**
-     * The not logged in message
-     */
-    NOT_LOGGED_IN ("you are not logged in"),
-
-    /**
-     * The wrong credentials message
-     */
-    WRONG_CREDENTIALS ("the given credentials are wrong. Please try again."),
-
-
-    LOGIN_FAILED ("the login failed. Please try again."),
-
     THIS_$STRING$_ALREADY_EXISTS ("this %s already exists"),
+    NOT_LOGGED_IN ("you are not logged in"),
+    WRONG_CREDENTIALS ("the given credentials are wrong. Please try again."),
+    LOGIN_FAILED ("the login failed. Please try again."),
     VALIDATION_FAILED_CHECKING_TYPES ("validation failed while trying to check the types in the passed arguments list"),
     UNDEFINED_DATATYPE ("there is an undefined data-type in the command signature"),
     SHOULD_BE_LONGER_THAN_$INT$("should be longer than %d"),

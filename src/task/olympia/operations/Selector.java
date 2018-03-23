@@ -8,6 +8,7 @@ import task.olympia.OlympiaApplication;
 import task.olympia.models.*;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -65,21 +66,34 @@ public class Selector {
         return this.getSortedList(OlympicSport.class, bySportType.thenComparing(bySportDiscipline));
     }
 
-    public List<Athlete> getAthleteSummary(OlympicSport olympicSport) throws DatabaseException {
+    public List<AthleteSummary> getAthleteSummary(OlympicSport olympicSport) throws DatabaseException {
         if (!existsInTable(OlympicSport.class, olympicSport)) {
-            throw new DatabaseException(Message.get(NOT_EXISTENT, "country name"));
+            throw new DatabaseException(Message.get(NOT_EXISTENT, "olympic sport"));
         }
 
-        List<Athlete> relevantAthletesList = this.getAllWhereMatches(
-                Athlete.class,
-                row -> row.practicesOlympicSport(olympicSport)
-        );
+        List<Athlete> relevantAthletesList = getAthletesBySport(olympicSport);
+        List<AthleteSummary> athleteSummary = joinAthletesToSportMedals(relevantAthletesList, olympicSport);
 
-        Comparator<Athlete> byMedalCount = Comparator.<Athlete>comparingInt(
-                athlete -> athlete.getMedalCount(olympicSport)).reversed();
-        Comparator<Athlete> byId = Comparator.comparingInt(Athlete::getId);
+        Comparator<AthleteSummary> byMedalCount = Comparator.comparingInt(AthleteSummary::getMedalCount).reversed();
+        Comparator<AthleteSummary> byId = Comparator.comparingInt(AthleteSummary::getId);
 
-        return getSortedList(relevantAthletesList, byMedalCount.thenComparing(byId));
+        athleteSummary.sort(byMedalCount.thenComparing(byId));
+
+        return athleteSummary;
+    }
+
+    private List<Athlete> getAthletesBySport(OlympicSport olympicSport) {
+        return this.getAllWhereMatches(Athlete.class, row -> row.practicesOlympicSport(olympicSport));
+    }
+
+    private List<AthleteSummary> joinAthletesToSportMedals(List<Athlete> relevantAthletes, OlympicSport olympicSport) {
+        return relevantAthletes.stream()
+                .map(athlete -> new AthleteSummary(athlete, this.getAllWhereMatches(
+                        Competition.class,
+                        row -> row.getAthleteId() == athlete.getId()
+                                && row.getOlympicSport().equals(olympicSport))
+                        .stream().mapToInt(Competition::getMedalValue).sum()))
+                .collect(Collectors.toList());
     }
 
     private boolean countryNameExists(String countryName) {
@@ -110,7 +124,7 @@ public class Selector {
                     .collect(Collectors.toList());
         }
 
-        return null;
+        return new ArrayList<>();
     }
 
 

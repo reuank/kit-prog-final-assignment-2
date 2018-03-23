@@ -98,7 +98,7 @@ public class OlympiaApplication {
         return this.selector.getOlympicSportsSorted();
     }
 
-    public List<Athlete> getAthleteSummary(OlympicSport olympicSport) throws DatabaseException {
+    public List<AthleteSummary> getAthleteSummary(OlympicSport olympicSport) throws DatabaseException {
         return this.selector.getAthleteSummary(olympicSport);
     }
 

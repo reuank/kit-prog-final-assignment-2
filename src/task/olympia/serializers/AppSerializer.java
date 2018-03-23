@@ -1,9 +1,6 @@
 package task.olympia.serializers;
 
-import task.olympia.models.Athlete;
-import task.olympia.models.IocCode;
-import task.olympia.models.OlympicSport;
-import task.olympia.models.SportsVenue;
+import task.olympia.models.*;
 import task.olympia.serializers.types.IocCodesSerializer;
 import task.olympia.serializers.types.OlympicSportsSerializer;
 import task.olympia.serializers.types.SportsVenuesSerializer;
@@ -29,7 +26,7 @@ public class AppSerializer {
         return this.olympicSportsSerializer.serialize(sportDisciplines);
     }
 
-    public List<String> serializeSummaryAthletes(List<Athlete> athletes) {
-        return this.summaryAthletesSerializer.serialize(athletes);
+    public List<String> serializeSummaryAthletes(List<AthleteSummary> athleteSummary) {
+        return this.summaryAthletesSerializer.serialize(athleteSummary);
     }
 }

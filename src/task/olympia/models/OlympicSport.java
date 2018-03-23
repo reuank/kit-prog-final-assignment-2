@@ -13,7 +13,8 @@ public class OlympicSport extends Model {
 
     @Override
     public boolean equals(Object other) {
-        return ((OlympicSport) other).getSportDiscipline().equals(this.sportDiscipline)
+        return other instanceof OlympicSport
+                && ((OlympicSport) other).getSportDiscipline().equals(this.sportDiscipline)
                 && ((OlympicSport) other).getSportType().equals(this.sportType);
     }
 
