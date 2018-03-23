@@ -1,5 +1,8 @@
 package task.olympia.models;
 
+/**
+ * The representation of a medal
+ */
 public enum Medal {
     GOLD,
     SILVER,

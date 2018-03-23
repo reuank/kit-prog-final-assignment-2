@@ -75,30 +75,12 @@ public class Selector {
                 row -> row.practicesOlympicSport(olympicSport)
         );
 
-        Comparator<Athlete> byMedalCount = Comparator.comparingInt(Athlete::getTotalMedalCount).reversed();
+        Comparator<Athlete> byMedalCount = Comparator.<Athlete>comparingInt(
+                athlete -> athlete.getMedalCount(olympicSport)).reversed();
         Comparator<Athlete> byId = Comparator.comparingInt(Athlete::getId);
 
         return getSortedList(relevantAthletesList, byMedalCount.thenComparing(byId));
     }
-
-   /* public int getMedalsOfAthlete(Athlete athlete) {
-        return this.getCorrespondingTable(Competition.class)
-                .getRows()
-                .stream()
-                .filter(competition -> competition.getAthlete().equals(athlete) && competition.wasWon())
-                .collect(Collectors.toList())
-                .size();
-    }
-
-    public int getMedalCountOfAthlete(Athlete athlete, OlympicSport olympicSport) {
-        return this.getCorrespondingTable(Athlete.class)
-                .getRows()
-                .stream()
-                .filter(ath -> ath.equals(athlete) && ath.practicesOlympicSport(olympicSport))
-                .mapToInt(ath -> ath.getTotalMedalCount(olympicSport))
-                .sum();
-    } */
-
 
     private boolean countryNameExists(String countryName) {
         return this.getCorrespondingTable(IocCode.class).anyMatch(code -> code.getCountryName().equals(countryName));

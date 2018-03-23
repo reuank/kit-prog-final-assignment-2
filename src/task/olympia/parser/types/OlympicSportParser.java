@@ -18,6 +18,14 @@ public class OlympicSportParser implements IParser<OlympicSport> {
             String sportType = args[0];
             String sportDiscipline = args[1];
 
+            SyntaxValidator.validateString(sportType)
+                    .isNotNull()
+                    .throwIfInvalid("sport type");
+
+            SyntaxValidator.validateString(sportDiscipline)
+                    .isNotNull()
+                    .throwIfInvalid("sport discipline");
+
             return new OlympicSport(sportType, sportDiscipline);
         } catch (ValidationException validationException) {
             throw new ParserException(validationException.getMessage());

@@ -19,7 +19,8 @@ public class Inserter {
     }
 
     public boolean insertAthlete(Athlete athlete) throws DatabaseException {
-        Athlete matchingAthlete = this.selector.getFirstWhereMatches(Athlete.class, row -> row.equals(athlete));
+        Athlete matchingAthlete = this.selector.getAthleteById(athlete.getId());
+
         IocCode matchingIocCode = this.selector.getIocCodeByCountryName(athlete.getCountryName());
         this.requireHard(matchingIocCode, "country name");
 

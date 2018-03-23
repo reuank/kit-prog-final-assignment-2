@@ -46,6 +46,7 @@ public class SportsVenueParser implements IParser {
 
             int seatCountInt = SyntaxValidator.validateInt(seatCount)
                     .isPositive()
+                    .throwIfInvalid("the seat count")
                     .getResult();
 
             return new SportsVenue(venueIdInt, countryName, location, name, openingYearInt, seatCountInt);

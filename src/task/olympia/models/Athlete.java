@@ -35,7 +35,10 @@ public class Athlete extends Model {
 
     @Override
     public boolean equals(Object other) {
-        return ((Athlete) other).id == this.id;
+        return ((Athlete) other).id == this.id
+                && ((Athlete) other).getIocCode().equals(this.iocCode)
+                && ((Athlete) other).getFirstname().equals(this.firstname)
+                && ((Athlete) other).getLastname().equals(this.lastname);
     }
 
     public int getId() {
@@ -85,21 +88,26 @@ public class Athlete extends Model {
     }
 
     public void assignCompetition(Competition competition) {
-        if (competition.wasWon()) {
+        if (competition.wasWon() && this.practicesOlympicSport(competition.getOlympicSport())) {
             this.competitionsMap.get(competition.getOlympicSport()).add(competition);
         }
     }
 
     public int getMedalCount(OlympicSport olympicSport) {
-        if (practicesOlympicSport(olympicSport) && !this.competitionsMap.get(olympicSport).isEmpty()) {
-            return this.competitionsMap.get(olympicSport).size();
-        }
+        if (!practicesOlympicSport(olympicSport)) return 0;
 
-        return 0;
+        if (this.competitionsMap.get(olympicSport).isEmpty()) return 0;
+
+        return this.competitionsMap.get(olympicSport).size();
     }
 
     public int getTotalMedalCount() {
-        return olympicSports.stream().mapToInt(this::getMedalCount).sum();
+        int sum = 0;
+        for (int i = 0; i < olympicSports.size(); i++) {
+            sum += getMedalCount(olympicSports.get(i));
+        }
+        return sum;
+        //return olympicSports.stream().mapToInt(this::getMedalCount).sum();
     }
 
     public boolean practicesOlympicSport(OlympicSport olympicSport) {

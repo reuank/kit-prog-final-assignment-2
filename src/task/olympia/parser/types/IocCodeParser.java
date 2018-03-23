@@ -28,7 +28,7 @@ public class IocCodeParser implements IParser {
 
             int iocIdInt = SyntaxValidator.validateInt(iocId)
                     .isPositive()
-                    .isInRange(0, 999)
+                    .isInRange(1, 999)
                     .throwIfInvalid("the IOC-Id")
                     .getResult();
 
