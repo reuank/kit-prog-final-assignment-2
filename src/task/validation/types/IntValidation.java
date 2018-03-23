@@ -165,6 +165,20 @@ public class IntValidation {
     }
 
     /**
+     * Checks whether the Integer is a multiple of a given value plus an offset.
+     * @param value The value the Integer shall be a multiple of.
+     * @param offset The desired offset.
+     * @return Returns the current Validation object, so that other validation can be applied.
+     */
+    public IntValidation isMultipleOf(int value, int offset) {
+        if (this.validateMe % value != offset) {
+            return addError(String.format("should be a multiple of %d and have offset %d", value, offset));
+        }
+
+        return this;
+    }
+
+    /**
      * Throws all collected errors, if there are any.
      * @param paramName The name of the validation object that shall occur in the error message.
      * @return Returns the current Validation object, so that other validation can be applied.

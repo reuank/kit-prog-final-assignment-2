@@ -7,6 +7,8 @@ import task.exceptions.InvalidCallOfCommandException;
 import task.exceptions.ValidationException;
 import task.interfaces.IRestrictedCommand;
 import task.olympia.OlympiaApplication;
+import task.olympia.models.Athlete;
+import task.olympia.models.IocCode;
 import task.userinterface.auth.Permission;
 import task.userinterface.validation.InputValidator;
 import task.interfaces.ICommand;
@@ -43,7 +45,10 @@ public class SummaryAthletesCommand implements IExecutableCommand, IRestrictedCo
 
             this.app.getInputValidator().validateCommand(command, this.commandSignature);
 
-            outputStream.add("OK");
+            List<Athlete> athleteList = this.app.getAthleteSummary();
+            //List<String> serializedList = this.app.getSerializer().serializeAthleteSummary(athleteList);
+
+            //outputStream.addAll(serializedList);
         } catch (ValidationException validationException) {
             throw new InvalidCallOfCommandException(
                     command.getSlug(),

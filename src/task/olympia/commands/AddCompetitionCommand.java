@@ -2,11 +2,10 @@ package task.olympia.commands;
 
 import task.constructs.program.Argument;
 import task.constructs.program.CommandSignature;
-import task.exceptions.AuthException;
-import task.exceptions.InvalidCallOfCommandException;
-import task.exceptions.ValidationException;
+import task.exceptions.*;
 import task.interfaces.IRestrictedCommand;
 import task.olympia.OlympiaApplication;
+import task.olympia.models.Competition;
 import task.userinterface.auth.Permission;
 import task.userinterface.validation.InputValidator;
 import task.interfaces.ICommand;
@@ -24,15 +23,14 @@ public class AddCompetitionCommand implements IExecutableCommand, IRestrictedCom
     private Permission[] requiredPermissions = new Permission[]{MUST_BE_LOGGED_IN, MUST_BE_ADMIN};
     private CommandSignature commandSignature = new CommandSignature(
             "add-competition",
-            new Argument("id", STRING),
-            new Argument("athlete_id", STRING),
-            new Argument("year", STRING),
-            new Argument("country_name", STRING),
-            new Argument("sport_type", STRING),
+            new Argument("athlete id", STRING),
+            new Argument("year", INT),
+            new Argument("country name", STRING),
+            new Argument("sport type", STRING),
             new Argument("discipline", STRING),
-            new Argument("gold", INT),
-            new Argument("silver", INT),
-            new Argument("bronze", INT)
+            new Argument("gold medal count", INT),
+            new Argument("silver medal count", INT),
+            new Argument("bronze medal count", INT)
     );
 
     public AddCompetitionCommand(OlympiaApplication app) {
@@ -51,6 +49,9 @@ public class AddCompetitionCommand implements IExecutableCommand, IRestrictedCom
 
             this.app.getInputValidator().validateCommand(command, this.commandSignature);
 
+            Competition competition = this.app.getParser().parseCompetition(command.getArgs());
+            this.app.addCompetition(competition);
+
             outputStream.add("OK");
         } catch (ValidationException validationException) {
             throw new InvalidCallOfCommandException(
@@ -58,8 +59,8 @@ public class AddCompetitionCommand implements IExecutableCommand, IRestrictedCom
                     this.commandSignature.getCommandSignature(),
                     validationException.getMessage()
             );
-        } catch (AuthException authException) {
-            throw new InvalidCallOfCommandException(authException.getMessage());
+        } catch (AuthException | DatabaseException | ParserException exception) {
+            throw new InvalidCallOfCommandException(exception.getMessage());
         }
     }
 

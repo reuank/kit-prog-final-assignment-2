@@ -17,6 +17,11 @@ public class User extends Model {
         this.password = args[3];
     }
 
+    @Override
+    public boolean equals(Object other) {
+        return ((User) other).getUsername().equals(this.username);
+    }
+
     public UserGroup getUserGroup() {
         return userGroup;
     }

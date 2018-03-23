@@ -15,6 +15,10 @@ public class IocCode extends Model {
         this.determinationYear = determinationYear;
     }
 
+    public IocCode(String countryName) {
+        this.countryName = countryName;
+    }
+
     @Override
     public boolean equals(Object other) {
         return ((IocCode) other).getId() == (this.id)

@@ -30,6 +30,6 @@ public class Table<T extends Model> {
     }
 
     public boolean anyMatch(Predicate<T> predicate) {
-        return this.rows.stream().anyMatch(predicate);
+        return !this.isEmpty() && this.rows.stream().anyMatch(predicate);
     }
 }
