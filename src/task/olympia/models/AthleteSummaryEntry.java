@@ -1,10 +1,10 @@
 package task.olympia.models;
 
-public class AthleteSummary {
+public class AthleteSummaryEntry {
     private final Athlete athlete;
     private final int medalCount;
 
-    public AthleteSummary(Athlete athlete, int medalCount) {
+    public AthleteSummaryEntry(Athlete athlete, int medalCount) {
         this.athlete = athlete;
         this.medalCount = medalCount;
     }

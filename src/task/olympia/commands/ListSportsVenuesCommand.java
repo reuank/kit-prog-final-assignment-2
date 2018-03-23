@@ -1,6 +1,5 @@
 package task.olympia.commands;
 
-import task.constructs.database.Database;
 import task.constructs.program.Argument;
 import task.constructs.program.CommandSignature;
 import task.exceptions.*;

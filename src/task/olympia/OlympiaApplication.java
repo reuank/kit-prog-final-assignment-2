@@ -15,7 +15,6 @@ import task.userinterface.validation.InputValidator;
 
 import java.util.List;
 
-import static task.lang.Message.ALREADY_EXISTS;
 import static task.lang.Message.NOT_EXISTENT;
 
 public class OlympiaApplication {
@@ -98,9 +97,14 @@ public class OlympiaApplication {
         return this.selector.getOlympicSportsSorted();
     }
 
-    public List<AthleteSummary> getAthleteSummary(OlympicSport olympicSport) throws DatabaseException {
+    public List<AthleteSummaryEntry> getAthleteSummary(OlympicSport olympicSport) throws DatabaseException {
         return this.selector.getAthleteSummary(olympicSport);
     }
+
+    public List<OlympicMedalTableEntry> getOlympiaMedalTable() {
+        return this.selector.getOlympicMedalTable();
+    }
+
 
     public void reset() {
         Database newOlympiaDatabase = new Database();

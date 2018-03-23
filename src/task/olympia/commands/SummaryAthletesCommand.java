@@ -5,8 +5,7 @@ import task.constructs.program.CommandSignature;
 import task.exceptions.*;
 import task.interfaces.IRestrictedCommand;
 import task.olympia.OlympiaApplication;
-import task.olympia.models.Athlete;
-import task.olympia.models.AthleteSummary;
+import task.olympia.models.AthleteSummaryEntry;
 import task.olympia.models.OlympicSport;
 import task.userinterface.auth.Permission;
 import task.interfaces.ICommand;
@@ -44,7 +43,7 @@ public class SummaryAthletesCommand implements IExecutableCommand, IRestrictedCo
             this.app.getInputValidator().validateCommand(command, this.commandSignature);
 
             OlympicSport olympicSport = this.app.getParser().parseOlympicSport(command.getArgs());
-            List<AthleteSummary> athleteList = this.app.getAthleteSummary(olympicSport);
+            List<AthleteSummaryEntry> athleteList = this.app.getAthleteSummary(olympicSport);
             List<String> serializedList = this.app.getSerializer().serializeSummaryAthletes(athleteList);
 
             outputStream.addAll(serializedList);

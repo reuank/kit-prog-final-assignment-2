@@ -8,7 +8,6 @@ import task.olympia.OlympiaApplication;
 import task.olympia.models.*;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -66,29 +65,62 @@ public class Selector {
         return this.getSortedList(OlympicSport.class, bySportType.thenComparing(bySportDiscipline));
     }
 
-    public List<AthleteSummary> getAthleteSummary(OlympicSport olympicSport) throws DatabaseException {
+    public List<AthleteSummaryEntry> getAthleteSummary(OlympicSport olympicSport) throws DatabaseException {
         if (!existsInTable(OlympicSport.class, olympicSport)) {
             throw new DatabaseException(Message.get(NOT_EXISTENT, "olympic sport"));
         }
 
         List<Athlete> relevantAthletesList = getAthletesBySport(olympicSport);
-        List<AthleteSummary> athleteSummary = joinAthletesToSportMedals(relevantAthletesList, olympicSport);
+        List<AthleteSummaryEntry> athleteSummary = joinAthletesToSportMedals(relevantAthletesList, olympicSport);
 
-        Comparator<AthleteSummary> byMedalCount = Comparator.comparingInt(AthleteSummary::getMedalCount).reversed();
-        Comparator<AthleteSummary> byId = Comparator.comparingInt(AthleteSummary::getId);
+        Comparator<AthleteSummaryEntry> byMedalCount = Comparator.comparingInt(AthleteSummaryEntry::getMedalCount).reversed();
+        Comparator<AthleteSummaryEntry> byId = Comparator.comparingInt(AthleteSummaryEntry::getId);
 
         athleteSummary.sort(byMedalCount.thenComparing(byId));
 
         return athleteSummary;
     }
 
+    public List<OlympicMedalTableEntry> getOlympicMedalTable() {
+        List<OlympicMedalTableEntry> medalTable = getCorrespondingTable(IocCode.class).getRows().stream()
+                .map(iocCode -> new OlympicMedalTableEntry(iocCode, getMedalsForIocCode(iocCode)))
+                .collect(Collectors.toList());
+
+        medalTable.sort(
+                Comparator.comparing(OlympicMedalTableEntry::getGold).reversed()
+                        .thenComparing(Comparator.comparing(OlympicMedalTableEntry::getSilver).reversed())
+                        .thenComparing(Comparator.comparing(OlympicMedalTableEntry::getBronze).reversed())
+                        .thenComparing(Comparator.comparing(OlympicMedalTableEntry::getIocId)));
+
+        return medalTable;
+    }
+
+    private Map<Medal, Integer> getMedalsForIocCode(IocCode iocCode) {
+        //TODO AUSLAGERN
+        List<Competition> competitionList = getAllWhereMatches(
+                Competition.class,
+                competition -> competition.getIocCode().equals(iocCode));
+
+        List<Medal> medalList = competitionList.stream().map(Competition::getMedal).collect(Collectors.toList());
+
+        EnumMap<Medal, Integer> medalMap = new EnumMap<>(Medal.class);
+
+        medalList.forEach(medal -> {
+            medalMap.putIfAbsent(medal, 0);
+            medalMap.put(medal, medalMap.get(medal) + 1);
+        });
+
+        return medalMap;
+    }
+
+
     private List<Athlete> getAthletesBySport(OlympicSport olympicSport) {
         return this.getAllWhereMatches(Athlete.class, row -> row.practicesOlympicSport(olympicSport));
     }
 
-    private List<AthleteSummary> joinAthletesToSportMedals(List<Athlete> relevantAthletes, OlympicSport olympicSport) {
+    private List<AthleteSummaryEntry> joinAthletesToSportMedals(List<Athlete> relevantAthletes, OlympicSport olympicSport) {
         return relevantAthletes.stream()
-                .map(athlete -> new AthleteSummary(athlete, this.getAllWhereMatches(
+                .map(athlete -> new AthleteSummaryEntry(athlete, this.getAllWhereMatches(
                         Competition.class,
                         row -> row.getAthleteId() == athlete.getId()
                                 && row.getOlympicSport().equals(olympicSport))
@@ -101,6 +133,14 @@ public class Selector {
     }
 
     /* ------------- GENERAL: GETTER ------------- */
+
+    /**
+     *
+     * @param itemClass
+     * @param item
+     * @param <T>
+     * @return
+     */
     public <T extends Model> boolean existsInTable(Class<T> itemClass, T item) {
         return this.app.getDatabase().getTable(itemClass)
                 .getRows()
@@ -108,7 +148,7 @@ public class Selector {
                 .anyMatch(row -> row.equals(item));
     }
 
-    public <T extends Model> T getFirstWhereMatches(Class<T> itemClass, Predicate<T> predicate) {
+    private <T extends Model> T getFirstWhereMatches(Class<T> itemClass, Predicate<T> predicate) {
         if (this.getCorrespondingTable(itemClass).anyMatch(predicate)) {
             return getAllWhereMatches(itemClass, predicate).get(0);
         }
@@ -116,7 +156,7 @@ public class Selector {
         return null;
     }
 
-    public <T extends Model> List<T> getAllWhereMatches(Class<T> itemClass, Predicate<T> predicate) {
+    private <T extends Model> List<T> getAllWhereMatches(Class<T> itemClass, Predicate<T> predicate) {
         Table<T> table = this.app.getDatabase().getTable(itemClass);
         if (table.anyMatch(predicate)) {
             return table.getRows().stream()
@@ -129,27 +169,18 @@ public class Selector {
 
 
     /* ------------- GENERAL: GET LISTS AND TABLES ------------- */
-    public <T extends Model> Table<T> getCorrespondingTable(Class<T> itemClass) {
+    private  <T extends Model> Table<T> getCorrespondingTable(Class<T> itemClass) {
         return this.app.getDatabase().getTable(itemClass);
     }
 
-    public <T extends Model> List<T> getSortedList(List<T> list, Comparator<T> comparator) {
+    private  <T extends Model> List<T> getSortedList(List<T> list, Comparator<T> comparator) {
         return list == null ? null : list.stream()
                 .sorted(comparator)
                 .collect(Collectors.toList());
     }
 
-    public <T extends Model> List<T> getSortedList(Class<T> itemClass, Comparator<T> comparator) {
+    private <T extends Model> List<T> getSortedList(Class<T> itemClass, Comparator<T> comparator) {
         Table<T> table = this.getCorrespondingTable(itemClass);
         return getSortedList(new ArrayList<>(table.getRows()), comparator);
-    }
-
-    /* ------------- EXCEPTION FACTORY ------------- */
-    public <T extends Model> void throwNonExistentException(String itemName) throws DatabaseException {
-        throw new DatabaseException(Message.get(NOT_EXISTENT, itemName));
-    }
-
-    public <T extends Model> void throwNotUniqueException(String itemName) throws DatabaseException {
-        throw new DatabaseException(Message.get(NOT_EXISTENT, itemName));
     }
 }

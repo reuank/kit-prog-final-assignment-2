@@ -6,6 +6,9 @@ import task.exceptions.InvalidCallOfCommandException;
 import task.exceptions.ValidationException;
 import task.interfaces.IRestrictedCommand;
 import task.olympia.OlympiaApplication;
+import task.olympia.models.AthleteSummaryEntry;
+import task.olympia.models.OlympicMedalTableEntry;
+import task.olympia.models.OlympicSport;
 import task.userinterface.auth.Permission;
 import task.userinterface.validation.InputValidator;
 import task.interfaces.ICommand;
@@ -37,7 +40,10 @@ public class OlympicMedalTableCommand implements IExecutableCommand, IRestricted
 
             this.app.getInputValidator().validateCommand(command, this.commandSignature);
 
-            outputStream.add("OK");
+            List<OlympicMedalTableEntry> medalTable = this.app.getOlympiaMedalTable();
+            List<String> serializedList = this.app.getSerializer().serializeOlympicMedalTable(medalTable);
+
+            outputStream.addAll(serializedList);
         } catch (ValidationException validationException) {
             throw new InvalidCallOfCommandException(
                     command.getSlug(),
