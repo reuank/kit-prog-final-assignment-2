@@ -3,18 +3,17 @@ package task.olympia.models;
 import task.constructs.database.Model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import static task.olympia.models.Medal.*;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 
 public class Athlete extends Model {
-        private int id;
-        private String firstname;
-        private String lastname;
-        private IocCode iocCode;
-        private String countryName;
-        private ArrayList<OlympicSport> olympicSports;
-        private HashMap<OlympicSport, ArrayList<Competition>> activityMap;
+    private int id;
+    private String firstname;
+    private String lastname;
+    private IocCode iocCode;
+    private String countryName;
+    private ArrayList<OlympicSport> olympicSports;
+    private NavigableMap<OlympicSport, ArrayList<Competition>> competitionsMap;
 
     public Athlete(int id, String firstname, String lastname, String countryName, OlympicSport olympicSport) {
         this.id = id;
@@ -22,8 +21,8 @@ public class Athlete extends Model {
         this.lastname = lastname;
         this.countryName = countryName;
         this.olympicSports = new ArrayList<>();
-        this.olympicSports.add(olympicSport);
-        this.activityMap = new HashMap<>();
+        this.competitionsMap = new TreeMap<>();
+        this.assignOlympicSport(olympicSport);
     }
 
     public Athlete(int id) {
@@ -31,7 +30,7 @@ public class Athlete extends Model {
         this.firstname = "";
         this.lastname = "";
         this.countryName = "";
-        this.olympicSports = new ArrayList<>();
+        this.competitionsMap = new TreeMap<>();
     }
 
     @Override
@@ -76,28 +75,34 @@ public class Athlete extends Model {
         return countryName;
     }
 
-    public void addOlympicSport(OlympicSport olympicSport) {
+    public OlympicSport getLatestOlympicSport() {
+        return this.olympicSports.get(olympicSports.size() - 1);
+    }
+
+    public void assignOlympicSport(OlympicSport olympicSport) {
         this.olympicSports.add(olympicSport);
-        this.activityMap.put(olympicSport, new ArrayList<>());
+        this.competitionsMap.put(olympicSport, new ArrayList<>());
     }
 
     public void assignCompetition(Competition competition) {
         if (competition.wasWon()) {
-            this.activityMap.get(competition.getOlympicSport()).add(competition);
+            this.competitionsMap.get(competition.getOlympicSport()).add(competition);
         }
     }
 
+    public int getMedalCount(OlympicSport olympicSport) {
+        if (practicesOlympicSport(olympicSport) && !this.competitionsMap.get(olympicSport).isEmpty()) {
+            return this.competitionsMap.get(olympicSport).size();
+        }
+
+        return 0;
+    }
+
+    public int getTotalMedalCount() {
+        return olympicSports.stream().mapToInt(this::getMedalCount).sum();
+    }
+
     public boolean practicesOlympicSport(OlympicSport olympicSport) {
-        ArrayList<OlympicSport> olympicSports = getOlympicSports();
-        return olympicSports.contains(olympicSport);
-    }
-
-    public OlympicSport getLatestOlympicSport() {
-        ArrayList<OlympicSport> olympicSports = getOlympicSports();
-        return olympicSports.get(olympicSports.size() - 1);
-    }
-
-    public ArrayList<OlympicSport> getOlympicSports() {
-        return olympicSports;
+        return this.olympicSports.contains(olympicSport);
     }
 }

@@ -8,13 +8,10 @@ import task.olympia.OlympiaApplication;
 import task.olympia.models.*;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static task.lang.Message.NOT_EXISTENT;
-import static task.olympia.models.Medal.GOLD;
 
 public class Selector {
     private OlympiaApplication app;
@@ -45,7 +42,11 @@ public class Selector {
         return this.getSortedList(IocCode.class, byDeterminationYear.thenComparing(byId));
     }
 
-    public List<SportsVenue> getSportsVenuesSorted(String countryName) {
+    public List<SportsVenue> getSportsVenuesSorted(String countryName) throws DatabaseException {
+        if (!countryNameExists(countryName)) {
+            throw new DatabaseException(Message.get(NOT_EXISTENT, "country name"));
+        }
+
         List<SportsVenue> venuesByCountryName = this.getAllWhereMatches(
                 SportsVenue.class,
                 row -> row.getCountryName().equals(countryName)
@@ -64,21 +65,23 @@ public class Selector {
         return this.getSortedList(OlympicSport.class, bySportType.thenComparing(bySportDiscipline));
     }
 
-    public List<Athlete> getAthleteSummary(OlympicSport olympicSport) {
+    public List<Athlete> getAthleteSummary(OlympicSport olympicSport) throws DatabaseException {
+        if (!existsInTable(OlympicSport.class, olympicSport)) {
+            throw new DatabaseException(Message.get(NOT_EXISTENT, "country name"));
+        }
+
         List<Athlete> relevantAthletesList = this.getAllWhereMatches(
                 Athlete.class,
                 row -> row.practicesOlympicSport(olympicSport)
         );
 
-        Comparator<Athlete> byMedalCount = Comparator.comparingInt(this::getTotalMedalCountOfAthlete).reversed();
+        Comparator<Athlete> byMedalCount = Comparator.comparingInt(Athlete::getTotalMedalCount).reversed();
         Comparator<Athlete> byId = Comparator.comparingInt(Athlete::getId);
 
-        return relevantAthletesList.stream()
-                .sorted(byMedalCount.thenComparing(byId))
-                .collect(Collectors.toList());
+        return getSortedList(relevantAthletesList, byMedalCount.thenComparing(byId));
     }
 
-    public int getMedalsOfAthlete(Athlete athlete) {
+   /* public int getMedalsOfAthlete(Athlete athlete) {
         return this.getCorrespondingTable(Competition.class)
                 .getRows()
                 .stream()
@@ -87,14 +90,19 @@ public class Selector {
                 .size();
     }
 
-    public int getTotalMedalCountOfAthlete(Athlete athlete) {
-        return this.getCorrespondingTable(Competition.class)
+    public int getMedalCountOfAthlete(Athlete athlete, OlympicSport olympicSport) {
+        return this.getCorrespondingTable(Athlete.class)
                 .getRows()
                 .stream()
-                .filter(competition -> competition.getAthlete().equals(athlete) && competition.wasWon())
-                .collect(Collectors.toList()).size();
-    }
+                .filter(ath -> ath.equals(athlete) && ath.practicesOlympicSport(olympicSport))
+                .mapToInt(ath -> ath.getTotalMedalCount(olympicSport))
+                .sum();
+    } */
 
+
+    private boolean countryNameExists(String countryName) {
+        return this.getCorrespondingTable(IocCode.class).anyMatch(code -> code.getCountryName().equals(countryName));
+    }
 
     /* ------------- GENERAL: GETTER ------------- */
     public <T extends Model> boolean existsInTable(Class<T> itemClass, T item) {

@@ -1,10 +1,9 @@
 package task.olympia.commands;
 
+import task.constructs.database.Database;
 import task.constructs.program.Argument;
 import task.constructs.program.CommandSignature;
-import task.exceptions.AuthException;
-import task.exceptions.InvalidCallOfCommandException;
-import task.exceptions.ValidationException;
+import task.exceptions.*;
 import task.interfaces.IRestrictedCommand;
 import task.olympia.OlympiaApplication;
 import task.olympia.models.SportsVenue;
@@ -52,8 +51,8 @@ public class ListSportsVenuesCommand implements IExecutableCommand, IRestrictedC
                     this.commandSignature.getCommandSignature(),
                     validationException.getMessage()
             );
-        } catch (AuthException authException) {
-            throw new InvalidCallOfCommandException(authException.getMessage());
+        } catch (AuthException | DatabaseException exception) {
+            throw new InvalidCallOfCommandException(exception.getMessage());
         }
     }
 

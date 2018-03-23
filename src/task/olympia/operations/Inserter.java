@@ -37,7 +37,7 @@ public class Inserter {
                 throw new DatabaseException(Message.get(ALREADY_EXISTS, "athlete-olympic sport combination"));
             }
 
-            matchingAthlete.addOlympicSport(athlete.getLatestOlympicSport());
+            matchingAthlete.assignOlympicSport(athlete.getLatestOlympicSport());
             return true;
         }
 
@@ -46,9 +46,7 @@ public class Inserter {
 
     public boolean insertSportsVenue(SportsVenue sportsVenue) throws DatabaseException {
         IocCode matchingIocCode = this.selector.getIocCodeByCountryName(sportsVenue.getCountryName());
-        if (matchingIocCode == null) {
-            throw new DatabaseException(Message.get(NOT_EXISTENT, "country name"));
-        }
+        this.requireHard(matchingIocCode, "country name");
 
         sportsVenue.setIocCode(matchingIocCode);
 
@@ -56,6 +54,7 @@ public class Inserter {
     }
 
     public boolean insertCompetition(Competition competition) throws DatabaseException {
+        //Todo add athlete olympic sport sensitivity
         Athlete matchingAthlete = this.selector.getAthleteById(competition.getAthlete().getId());
         this.requireHard(matchingAthlete, "athlete");
         competition.setAthlete(matchingAthlete);
@@ -64,11 +63,22 @@ public class Inserter {
         this.requireHard(matchingIocCode, "country name");
         competition.setIocCode(matchingIocCode);
 
+        if (matchingIocCode.getYear() > competition.getYear()) {
+            throw new DatabaseException("the corresponding IOC code was registered after this competition");
+        }
+
         OlympicSport matchingOlympicSport = this.selector.getOlympicSport(competition.getOlympicSport());
         this.requireHard(matchingOlympicSport, "olympic sport");
+        if (!matchingAthlete.practicesOlympicSport(matchingOlympicSport)) {
+            throw new DatabaseException("this athlete does not practice this olympic sport");
+        }
+
         competition.setOlympicSport(matchingOlympicSport);
 
-        return this.uniqueInsert(Competition.class, competition, "competition");
+        this.uniqueInsert(Competition.class, competition, "competition");
+        matchingAthlete.assignCompetition(competition);
+
+        return true;
     }
 
     public <T extends Model> boolean requireHard(T item, String paramName) throws DatabaseException {

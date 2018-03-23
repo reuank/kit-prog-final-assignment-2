@@ -2,15 +2,12 @@ package task.olympia.commands;
 
 import task.constructs.program.Argument;
 import task.constructs.program.CommandSignature;
-import task.exceptions.AuthException;
-import task.exceptions.InvalidCallOfCommandException;
-import task.exceptions.ValidationException;
+import task.exceptions.*;
 import task.interfaces.IRestrictedCommand;
 import task.olympia.OlympiaApplication;
 import task.olympia.models.Athlete;
-import task.olympia.models.IocCode;
+import task.olympia.models.OlympicSport;
 import task.userinterface.auth.Permission;
-import task.userinterface.validation.InputValidator;
 import task.interfaces.ICommand;
 import task.interfaces.IExecutableCommand;
 
@@ -45,18 +42,19 @@ public class SummaryAthletesCommand implements IExecutableCommand, IRestrictedCo
 
             this.app.getInputValidator().validateCommand(command, this.commandSignature);
 
-            List<Athlete> athleteList = this.app.getAthleteSummary();
-            //List<String> serializedList = this.app.getSerializer().serializeAthleteSummary(athleteList);
+            OlympicSport olympicSport = this.app.getParser().parseOlympicSport(command.getArgs());
+            List<Athlete> athleteList = this.app.getAthleteSummary(olympicSport);
+            List<String> serializedList = this.app.getSerializer().serializeSummaryAthletes(athleteList);
 
-            //outputStream.addAll(serializedList);
+            outputStream.addAll(serializedList);
         } catch (ValidationException validationException) {
             throw new InvalidCallOfCommandException(
                     command.getSlug(),
                     this.commandSignature.getCommandSignature(),
                     validationException.getMessage()
             );
-        } catch (AuthException authException) {
-            throw new InvalidCallOfCommandException(authException.getMessage());
+        } catch (AuthException | DatabaseException | ParserException exception) {
+            throw new InvalidCallOfCommandException(exception.getMessage());
         }
     }
 

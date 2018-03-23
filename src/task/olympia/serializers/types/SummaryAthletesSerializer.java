@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AthleteSummarySerializer implements IListSerializer<Athlete, String> {
-    public AthleteSummarySerializer() {
+public class SummaryAthletesSerializer implements IListSerializer<Athlete, String> {
+    public SummaryAthletesSerializer() {
     }
 
     @Override
@@ -17,10 +17,11 @@ public class AthleteSummarySerializer implements IListSerializer<Athlete, String
     }
 
     public String serializeOne(Athlete item) {
-        return String.format("%03d %s %s %d",
+        return String.format("%04d %s %s %d",
                 item.getId(),
                 item.getFirstname(),
-                item.getLastname()
+                item.getLastname(),
+                item.getTotalMedalCount()
         );
     }
 }

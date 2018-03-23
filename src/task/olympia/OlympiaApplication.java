@@ -90,7 +90,7 @@ public class OlympiaApplication {
         return this.selector.getIocCodesSorted();
     }
 
-    public List<SportsVenue> getSportsVenuesSorted(String countryName) {
+    public List<SportsVenue> getSportsVenuesSorted(String countryName) throws DatabaseException {
         return this.selector.getSportsVenuesSorted(countryName);
     }
 
@@ -98,9 +98,8 @@ public class OlympiaApplication {
         return this.selector.getOlympicSportsSorted();
     }
 
-    public List<Athlete> getAthleteSummary() {
-        return this.selector.getAthleteSummary();
-        return null;
+    public List<Athlete> getAthleteSummary(OlympicSport olympicSport) throws DatabaseException {
+        return this.selector.getAthleteSummary(olympicSport);
     }
 
     public void reset() {
