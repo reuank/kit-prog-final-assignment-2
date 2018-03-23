@@ -21,14 +21,10 @@ public class Inserter {
     public boolean insertAthlete(Athlete athlete) throws DatabaseException {
         Athlete matchingAthlete = this.selector.getFirstWhereMatches(Athlete.class, row -> row.equals(athlete));
         IocCode matchingIocCode = this.selector.getIocCodeByCountryName(athlete.getCountryName());
-        if (matchingIocCode == null) {
-            throw new DatabaseException(Message.get(NOT_EXISTENT, "country name"));
-        }
+        this.requireHard(matchingIocCode, "country name");
 
         OlympicSport matchingOlympicSport = this.selector.getOlympicSport(athlete.getLatestOlympicSport());
-        if (matchingOlympicSport == null) {
-            throw new DatabaseException(Message.get(NOT_EXISTENT, "olympic sport"));
-        }
+        this.requireHard(matchingOlympicSport, "olympic sport");
 
         athlete.setIocCode(matchingIocCode);
 

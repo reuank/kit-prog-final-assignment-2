@@ -78,14 +78,13 @@ public class Selector {
                 .collect(Collectors.toList());
     }
 
-    public HashMap<Medal, AtomicInteger> getMedalsOfAthlete(Athlete athlete) {
-/*
+    public int getMedalsOfAthlete(Athlete athlete) {
         return this.getCorrespondingTable(Competition.class)
                 .getRows()
                 .stream()
                 .filter(competition -> competition.getAthlete().equals(athlete) && competition.wasWon())
-                .mapToInt();*/
-        return null;
+                .collect(Collectors.toList())
+                .size();
     }
 
     public int getTotalMedalCountOfAthlete(Athlete athlete) {

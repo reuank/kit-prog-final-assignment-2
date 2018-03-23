@@ -5,7 +5,7 @@ import task.constructs.database.Model;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static task.olympia.models.Medal.GOLD;
+import static task.olympia.models.Medal.*;
 
 public class Athlete extends Model {
         private int id;
@@ -14,7 +14,7 @@ public class Athlete extends Model {
         private IocCode iocCode;
         private String countryName;
         private ArrayList<OlympicSport> olympicSports;
-        private HashMap<Medal, Integer> medalCounter;
+        private HashMap<OlympicSport, ArrayList<Competition>> activityMap;
 
     public Athlete(int id, String firstname, String lastname, String countryName, OlympicSport olympicSport) {
         this.id = id;
@@ -23,8 +23,7 @@ public class Athlete extends Model {
         this.countryName = countryName;
         this.olympicSports = new ArrayList<>();
         this.olympicSports.add(olympicSport);
-        this.medalCounter = new HashMap<>();
-        this.initMedalCounter();
+        this.activityMap = new HashMap<>();
     }
 
     public Athlete(int id) {
@@ -79,6 +78,13 @@ public class Athlete extends Model {
 
     public void addOlympicSport(OlympicSport olympicSport) {
         this.olympicSports.add(olympicSport);
+        this.activityMap.put(olympicSport, new ArrayList<>());
+    }
+
+    public void assignCompetition(Competition competition) {
+        if (competition.wasWon()) {
+            this.activityMap.get(competition.getOlympicSport()).add(competition);
+        }
     }
 
     public boolean practicesOlympicSport(OlympicSport olympicSport) {
@@ -93,9 +99,5 @@ public class Athlete extends Model {
 
     public ArrayList<OlympicSport> getOlympicSports() {
         return olympicSports;
-    }
-
-    private void initMedalCounter() {
-
     }
 }
