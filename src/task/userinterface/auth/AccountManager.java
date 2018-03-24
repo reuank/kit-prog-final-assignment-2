@@ -39,7 +39,7 @@ public class AccountManager {
      */
     public void tryLogin(String username, String password) throws AuthException {
         if (!ldap.checkCredentials(username, password)) {
-            throw new AuthException(Message.getChained(WRONG_CREDENTIALS));
+            throw new AuthException(Message.get(WRONG_CREDENTIALS));
         }
 
         this.session.start(getUser(username));

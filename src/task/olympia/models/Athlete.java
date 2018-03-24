@@ -17,6 +17,7 @@ public class Athlete extends Model {
 
     /**
      * Instantiates a new admin object.
+     *
      * @param id The id.
      * @param firstname The firstname.
      * @param lastname The lastname.

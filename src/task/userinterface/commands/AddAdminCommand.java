@@ -14,8 +14,11 @@ import task.userinterface.models.User;
 import java.util.List;
 
 import static task.constructs.commands.Datatype.STRING;
-import static task.userinterface.models.UserGroup.ADMIN;
+import static task.userinterface.auth.UserGroup.ADMIN;
 
+/**
+ * The add admin command.
+ */
 public class AddAdminCommand implements IRestrictedCommand {
     private CLI userInterface;
     private Permission[] requiredPermissions = new Permission[]{};

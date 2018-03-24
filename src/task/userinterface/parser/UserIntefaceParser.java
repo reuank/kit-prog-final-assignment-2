@@ -4,9 +4,12 @@ import task.exceptions.ParserException;
 import task.interfaces.ICommand;
 import task.userinterface.parser.types.CommandParser;
 import task.userinterface.models.User;
-import task.userinterface.models.UserGroup;
+import task.userinterface.auth.UserGroup;
 import task.userinterface.parser.types.UserParser;
 
+/**
+ * The user interface parser.
+ */
 public class UserIntefaceParser {
     private UserParser userParser = new UserParser();
     private CommandParser commandParser = new CommandParser();

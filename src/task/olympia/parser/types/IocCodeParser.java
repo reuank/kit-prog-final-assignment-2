@@ -3,8 +3,11 @@ package task.olympia.parser.types;
 import task.exceptions.ParserException;
 import task.exceptions.ValidationException;
 import task.interfaces.IParser;
+import task.lang.Message;
 import task.olympia.models.IocCode;
 import task.validation.SyntaxValidator;
+
+import static task.lang.Message.*;
 
 public class IocCodeParser implements IParser {
     @Override
@@ -13,7 +16,7 @@ public class IocCodeParser implements IParser {
             SyntaxValidator.validateArray(args)
                     .isNotEmpty()
                     .isOfLength(4)
-                    .throwIfInvalid("the ioc code data");
+                    .throwIfInvalid(Message.get(IOC_CODE) + " " + Message.get(DATA));
 
             String iocId = args[0];
             String iocCode = args[1];
@@ -24,35 +27,35 @@ public class IocCodeParser implements IParser {
                     .isNotNull()
                     .isNotEmpty()
                     .isOfLength(3)
-                    .throwIfInvalid("the IOC-Id");
+                    .throwIfInvalid(Message.get(IOC_CODE) + " " + Message.get(ID));
 
             int iocIdInt = SyntaxValidator.validateInt(iocId)
                     .isPositive()
                     .isInRange(1, 999)
-                    .throwIfInvalid("the IOC-Id")
+                    .throwIfInvalid(Message.get(IOC_CODE) + " " + Message.get(ID))
                     .getResult();
 
             SyntaxValidator.validateString(iocCode)
                     .isNotNull()
                     .isNotEmpty()
                     .isOfLength(3)
-                    .throwIfInvalid("the IOC code");
+                    .throwIfInvalid(Message.get(IOC_CODE));
 
             SyntaxValidator.validateString(determinationYear)
                     .isNotNull()
                     .isNotEmpty()
                     .isOfLength(4)
-                    .throwIfInvalid("the determination year");
+                    .throwIfInvalid(Message.get(YEAR));
 
             int determinationYearInt = SyntaxValidator.validateInt(determinationYear)
                     .isPositive()
                     .isInRange(0, 9999)
-                    .throwIfInvalid("the determination year")
+                    .throwIfInvalid(Message.get(YEAR))
                     .getResult();
 
             return new IocCode(iocIdInt, iocCode, countryName, determinationYearInt);
         } catch (ValidationException validationException) {
-            throw new ParserException(validationException.getMessage());
+            throw new ParserException(Message.get(IOC_CODE), validationException);
         }
     }
 }

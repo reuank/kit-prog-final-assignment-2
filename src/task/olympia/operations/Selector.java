@@ -11,7 +11,9 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static task.lang.Message.NOT_EXISTENT;
+import static task.lang.Message.COUNTRY_NAME;
+import static task.lang.Message.OLYMPIC_SPORT;
+import static task.lang.Message.THIS_$STING$_IS_NOT_EXISTENT;
 
 /**
  * Used to read in the database. Provides optimized queries to the app.
@@ -74,7 +76,7 @@ public class Selector {
      */
     public List<SportsVenue> getSportsVenuesSorted(String countryName) throws DatabaseException {
         if (!countryNameExists(countryName)) {
-            throw new DatabaseException(Message.get(NOT_EXISTENT, "country name"));
+            throw new DatabaseException(Message.get(THIS_$STING$_IS_NOT_EXISTENT, COUNTRY_NAME.get()));
         }
 
         List<SportsVenue> venuesByCountryName = this.getAllWhereMatches(
@@ -107,7 +109,7 @@ public class Selector {
      */
     public List<AthleteSummaryEntry> getAthleteSummary(OlympicSport olympicSport) throws DatabaseException {
         if (!existsInTable(OlympicSport.class, olympicSport)) {
-            throw new DatabaseException(Message.get(NOT_EXISTENT, "olympic sport"));
+            throw new DatabaseException(Message.get(THIS_$STING$_IS_NOT_EXISTENT, OLYMPIC_SPORT.get()));
         }
 
         List<Athlete> relevantAthletesList = getAthletesBySport(olympicSport);

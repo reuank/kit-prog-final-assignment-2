@@ -3,10 +3,16 @@ package task.userinterface.parser.types;
 import task.exceptions.ParserException;
 import task.exceptions.ValidationException;
 import task.interfaces.IParser;
+import task.lang.Message;
 import task.userinterface.models.User;
-import task.userinterface.models.UserGroup;
+import task.userinterface.auth.UserGroup;
 import task.validation.SyntaxValidator;
 
+import static task.lang.Message.*;
+
+/**
+ * The user parser.
+ */
 public class UserParser implements IParser {
     @Override
     public User parse(String... args) throws ParserException {
@@ -14,7 +20,7 @@ public class UserParser implements IParser {
             SyntaxValidator.validateArray(args)
                     .isNotEmpty()
                     .isOfLength(4)
-                    .throwIfInvalid("the user data");
+                    .throwIfInvalid(Message.get(USER) + " " + Message.get(DATA));
 
             String firstname = args[0];
             String lastname = args[1];
@@ -24,23 +30,23 @@ public class UserParser implements IParser {
             SyntaxValidator.validateString(firstname)
                     .isNotNull()
                     .isNotContaining(";")
-                    .throwIfInvalid("the firstname");
+                    .throwIfInvalid(Message.get(FIRSTNAME));
 
             SyntaxValidator.validateString(lastname)
                     .isNotNull()
                     .isNotContaining(";")
-                    .throwIfInvalid("the lastname");
+                    .throwIfInvalid(Message.get(LASTNAME));
 
             SyntaxValidator.validateString(username)
                     .isNotNull()
                     .isOfLengthBetween(4, 8)
                     .isNotContaining(";")
-                    .throwIfInvalid("the username");
+                    .throwIfInvalid(Message.get(USERNAME));
 
             SyntaxValidator.validateString(password)
                     .isNotNull()
                     .isOfLengthBetween(8, 12)
-                    .throwIfInvalid("the password");
+                    .throwIfInvalid(Message.get(PASSWORD));
 
             return new User(UserGroup.getDefault(), firstname, lastname, username, password);
         } catch (ValidationException validationException) {

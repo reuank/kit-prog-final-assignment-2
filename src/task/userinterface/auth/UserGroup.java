@@ -1,14 +1,13 @@
-package task.userinterface.models;
+package task.userinterface.auth;
 
+/**
+ * Used to assign a user group and by this permissions to users.
+ */
 public enum UserGroup {
-    /**
-     * A admin
-     */
+    /** A admin */
     ADMIN,
 
-    /**
-     * A guest
-     */
+    /** A guest */
     GUEST;
 
     /**

@@ -75,7 +75,7 @@ public class IntValidation {
      */
     public IntValidation isGreaterThan(int lowerBound) {
         if (this.validateMe <= lowerBound) {
-            return addError(String.format("should be greater than %d", lowerBound));
+            return addError(Message.get(SHOULD_BE_GREATER_THAN_$INT$, lowerBound));
         }
 
         return this;
@@ -89,7 +89,7 @@ public class IntValidation {
      */
     public IntValidation isLessThan(int upperBound) {
         if (this.validateMe >= upperBound) {
-            return addError(Message.get(SHOULD_BE_GREATER_THAN_$INT$, upperBound));
+            return addError(Message.get(SHOULD_BE_LESS_THAN_$INT$, upperBound));
         }
 
         return this;
@@ -102,7 +102,7 @@ public class IntValidation {
      */
     public IntValidation isPositive() {
         if (this.validateMe < 0) {
-            return addError(Message.getChained(SHOULD_BE_POSITIVE));
+            return addError(Message.get(SHOULD_BE_POSITIVE));
         }
 
         return this;
@@ -115,7 +115,7 @@ public class IntValidation {
      */
     public IntValidation isNegative() {
         if (this.validateMe > 0) {
-            return addError(Message.getChained(SHOULD_BE_NEGATIVE));
+            return addError(Message.get(SHOULD_BE_NEGATIVE));
         }
 
         return this;
@@ -128,7 +128,7 @@ public class IntValidation {
      */
     public IntValidation isEven() {
         if (this.validateMe % 2 != 0) {
-            return addError(Message.getChained(SHOULD_BE_EVEN));
+            return addError(Message.get(SHOULD_BE_EVEN));
         }
 
         return this;
@@ -141,7 +141,7 @@ public class IntValidation {
      */
     public IntValidation isOdd() {
         if (this.validateMe % 2 == 0) {
-            return addError(Message.getChained(SHOULD_BE_ODD));
+            return addError(Message.get(SHOULD_BE_ODD));
         }
 
         return this;
@@ -205,7 +205,7 @@ public class IntValidation {
      *
      * @return The error messages.
      */
-    public String getErrors() {
+    private String getErrors() {
         return this.validationResult.getMessage();
     }
 

@@ -5,7 +5,11 @@ import task.exceptions.ParserException;
 import task.exceptions.ValidationException;
 import task.interfaces.ICommand;
 import task.interfaces.IParser;
+import task.lang.Message;
 import task.validation.SyntaxValidator;
+
+import static task.lang.Message.COMMAND;
+import static task.lang.Message.DATA;
 
 /**
  * Used for parsing a String to a command object.
@@ -17,7 +21,7 @@ public class CommandParser implements IParser<ICommand> {
             SyntaxValidator.validateArray(inputArray)
                     .isNotEmpty()
                     .isOfLengthBetween(1, 2)
-                    .throwIfInvalid("the passed command data array");
+                    .throwIfInvalid(Message.get(COMMAND) + " " + Message.get(DATA));
 
             String slug = inputArray[0];
             String[] arguments;
@@ -30,7 +34,7 @@ public class CommandParser implements IParser<ICommand> {
 
             return new Command(slug, arguments);
         } catch (ValidationException validationException) {
-            throw new ParserException("command", validationException.getMessage());
+            throw new ParserException(Message.get(COMMAND), validationException);
         }
     }
 }

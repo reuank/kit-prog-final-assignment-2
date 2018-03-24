@@ -1,6 +1,7 @@
 package task.userinterface.models;
 
 import task.constructs.database.Model;
+import task.userinterface.auth.UserGroup;
 
 /**
  * The user model.

@@ -3,9 +3,12 @@ package task.olympia.parser.types;
 import task.exceptions.ParserException;
 import task.exceptions.ValidationException;
 import task.interfaces.IParser;
+import task.lang.Message;
 import task.olympia.models.Athlete;
 import task.olympia.models.OlympicSport;
 import task.validation.SyntaxValidator;
+
+import static task.lang.Message.*;
 
 public class AthleteParser implements IParser<Athlete> {
     @Override
@@ -14,7 +17,7 @@ public class AthleteParser implements IParser<Athlete> {
             SyntaxValidator.validateArray(args)
                     .isNotEmpty()
                     .isOfLength(6)
-                    .throwIfInvalid("the athlete data");
+                    .throwIfInvalid(Message.get(ATHLETE) + " " + Message.get(DATA));
 
             String athleteId = args[0];
             String firstname = args[1];
@@ -27,44 +30,44 @@ public class AthleteParser implements IParser<Athlete> {
                     .isNotNull()
                     .isNotEmpty()
                     .isOfLength(4)
-                    .throwIfInvalid("the athlete id");
+                    .throwIfInvalid(Message.get(ATHLETE) + " " + Message.get(ID));
 
             int athleteIdInt = SyntaxValidator.validateInt(athleteId)
                     .isPositive()
                     .isInRange(1, 9999)
-                    .throwIfInvalid("the athlete id")
+                    .throwIfInvalid(Message.get(ATHLETE) + Message.get(ID))
                     .getResult();
 
             SyntaxValidator.validateString(firstname)
                     .isNotNull()
                     .isNotEmpty()
-                    .throwIfInvalid("firstname");
+                    .throwIfInvalid(Message.get(FIRSTNAME));
 
             SyntaxValidator.validateString(lastname)
                     .isNotNull()
                     .isNotEmpty()
-                    .throwIfInvalid("lastname");
+                    .throwIfInvalid(Message.get(LASTNAME));
 
             SyntaxValidator.validateString(countryName)
                     .isNotNull()
                     .isNotEmpty()
-                    .throwIfInvalid("country name");
+                    .throwIfInvalid(Message.get(COUNTRY_NAME));
 
             SyntaxValidator.validateString(sportType)
                     .isNotNull()
                     .isNotEmpty()
-                    .throwIfInvalid("sport type");
+                    .throwIfInvalid(Message.get(SPORTS_TYPE));
 
             SyntaxValidator.validateString(sportDiscipline)
                     .isNotNull()
                     .isNotEmpty()
-                    .throwIfInvalid("sport discipline");
+                    .throwIfInvalid(Message.get(SPORTS_DISCIPLINE));
 
             OlympicSport olympicSport =  new OlympicSport(sportType, sportDiscipline);
 
             return new Athlete(athleteIdInt, firstname, lastname, countryName, olympicSport);
         } catch (ValidationException validationException) {
-            throw new ParserException(validationException.getMessage());
+            throw new ParserException(Message.get(ATHLETE), validationException);
         }
     }
 }

@@ -15,8 +15,8 @@ import static task.lang.Message.*;
  * This class holds all applicable String-array validations.
  */
 public class StringArrayValidation {
-    private String[] validateMe;
-    private ValidationResult validationResult;
+    private final String[] validateMe;
+    private final ValidationResult validationResult;
 
     /**
      * Instanciates a new String-array validation, in which all the sub-validations can be chained together.
@@ -33,7 +33,7 @@ public class StringArrayValidation {
      */
     public StringArrayValidation isNotNull() {
         if (this.validateMe == null) {
-            return addError(Message.getChained(SHOULD_NOT_BE_NULL));
+            return addError(Message.get(SHOULD_NOT_BE_NULL));
         }
 
         return this;
@@ -50,7 +50,7 @@ public class StringArrayValidation {
             }
         }
 
-        return addError(Message.getChained(SHOULD_NOT_BE_EMPTY));
+        return addError(Message.get(SHOULD_NOT_BE_EMPTY));
     }
 
     /**
@@ -60,7 +60,7 @@ public class StringArrayValidation {
      */
     public StringArrayValidation isLongerOrEqualThan(int length) {
         if (this.validateMe == null) {
-            return addError(Message.getChained(SHOULD_NOT_BE_NULL));
+            return addError(Message.get(SHOULD_NOT_BE_NULL));
         }
 
         if (this.validateMe.length <= length) {
@@ -155,12 +155,12 @@ public class StringArrayValidation {
                 return this;
             }
 
-            return addError(Message.getChained(VALIDATION_FAILED_CHECKING_TYPES));
+            return addError(Message.get(VALIDATION_FAILED_CHECKING_TYPES));
         }
 
         // Number of types to check not equals number of given types
         if (this.validateMe.length != argTypes.length) {
-            return addError(Message.getChained(VALIDATION_FAILED_CHECKING_TYPES));
+            return addError(Message.get(VALIDATION_FAILED_CHECKING_TYPES));
         }
 
         ArrayList<Integer> failedIntParams = new ArrayList<>();
@@ -175,7 +175,7 @@ public class StringArrayValidation {
                 case STRING:
                     break;
                 default:
-                    throw new ValidationException(Message.getChained(UNDEFINED_DATATYPE));
+                    throw new ValidationException(Message.get(UNDEFINED_DATATYPE));
             }
         }
 
@@ -183,9 +183,9 @@ public class StringArrayValidation {
             String errorPhrase = failedIntParams.stream()
                     .map(Object::toString)
                     .collect(Collectors.joining(
-                            Message.getFormatted(" " + AND.get() + " "),
-                            Message.getChained(NUMBER),
-                            Message.getChained(NOT_OF_TYPE_$STRING$, INTEGER)
+                            Message.getOwnFormatted(" " + AND.get() + " "),
+                            Message.get(NUMBER),
+                            Message.get(NOT_OF_TYPE_$STRING$, INTEGER.get())
                     ));
 
             addError(errorPhrase);
@@ -212,7 +212,7 @@ public class StringArrayValidation {
      * Checks if the validation has failed so far.
      * @return Returns true if an error occurred so far.
      */
-    public boolean hasFailed() {
+    private boolean hasFailed() {
         return this.validationResult.failed();
     }
 
@@ -220,7 +220,7 @@ public class StringArrayValidation {
      * Gets the error messages that have been chained together so far.
      * @return The error messages.
      */
-    public String getErrors() {
+    private String getErrors() {
         return this.validationResult.getMessage();
     }
 

@@ -20,25 +20,18 @@ import task.userinterface.validation.InputValidator;
  * @author Leon Knauer
  *
  * General comments:
- * -    I intentionally designed this program in a framework-like way. By doing this, the olympia can easily be extended
- *          -   If another command should be added, simply add a new command class, extend IExecutable and
- *              register it in main.
- *          -   If the number of paramters for commands changes, simply adjust the command signature accordingly.
- *          -   If in the future also parameters of another type are allowed, just expand the type validation in the
- *              "String ArrayValidation" class and adjust the command signature accordingly.
- *          -   Some of the defined functions are not used within this particular project.
- *              This is due to the goal of having as much modularity and therefore expandability as possible.
-*           -   Some classes are meant as wrapper classes for simplifying the programming workflow.
- *                  E.g.: By typing "AppSerializer.", all the available Serializers are listed by Intellisense.
- * -    Input processing workflow: Input -> Parsing -> Validation -> Execution (if Executable command) -> Output
- * -    The Executable commands are used for semantic validation and then passing the data to the olympia instance
+ * - Some of the defined functions are not used within this particular project.
+ *     This is due to the goal of having as much modularity and therefore expandability as possible
+ * - Some classes are meant as wrapper classes for simplifying the programming workflow.
+ *     E.g.: By typing "getSerializer().", all the available Serializers are listed by Intellisense.
+ * - Input processing workflow: Input -> Parsing / Validation -> Execution (if Executable command) -> Output
  */
 
 public class Main {
 
     /**
      * Creates a new user interface with the corresponding user table,
-     * creates a new olympia app with the correponding tables,
+     * creates a new olympia app with the corresponding tables,
      * registers all valid commands and runs the the user interface.
      *
      * @param args The passed commands args.

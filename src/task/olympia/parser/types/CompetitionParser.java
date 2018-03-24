@@ -7,7 +7,7 @@ import task.lang.Message;
 import task.olympia.models.*;
 import task.validation.SyntaxValidator;
 
-import static task.lang.Message.TOO_MANY_MEDALS;
+import static task.lang.Message.*;
 
 public class CompetitionParser implements IParser<Competition> {
     @Override
@@ -16,7 +16,7 @@ public class CompetitionParser implements IParser<Competition> {
             SyntaxValidator.validateArray(args)
                     .isNotEmpty()
                     .isOfLength(8)
-                    .throwIfInvalid("the competition data");
+                    .throwIfInvalid(Message.get(COMPETITION) + " " + Message.get(DATA));
 
             String athleteId = args[0];
             String year = args[1];
@@ -31,52 +31,52 @@ public class CompetitionParser implements IParser<Competition> {
                     .isNotNull()
                     .isNotEmpty()
                     .isOfLength(4)
-                    .throwIfInvalid("the athlete id");
+                    .throwIfInvalid(Message.get(ATHLETE) + " " + Message.get(ID));
 
             int athleteIdInt = SyntaxValidator.validateInt(athleteId)
                     .isPositive()
                     .isInRange(1, 9999)
-                    .throwIfInvalid("the athlete id")
+                    .throwIfInvalid(Message.get(ATHLETE) + " " + Message.get(ID))
                     .getResult();
 
             int yearInt = SyntaxValidator.validateInt(year)
                     .isInRange(1926, 2018)
                     .isMultipleOf(4, 2)
-                    .throwIfInvalid("year")
+                    .throwIfInvalid(Message.get(YEAR))
                     .getResult();
 
             SyntaxValidator.validateString(countryName)
                     .isNotNull()
                     .isNotEmpty()
-                    .throwIfInvalid("country name");
+                    .throwIfInvalid(Message.get(COUNTRY_NAME));
 
             SyntaxValidator.validateString(sportType)
                     .isNotNull()
                     .isNotEmpty()
-                    .throwIfInvalid("sport type");
+                    .throwIfInvalid(Message.get(SPORTS_TYPE));
 
             SyntaxValidator.validateString(sportDiscipline)
                     .isNotNull()
                     .isNotEmpty()
-                    .throwIfInvalid("sport discipline");
+                    .throwIfInvalid(Message.get(SPORTS_DISCIPLINE));
 
             int goldMedalCountInt = SyntaxValidator.validateInt(goldMedalCount)
                     .isInRange(0, 1)
-                    .throwIfInvalid("gold medal count")
+                    .throwIfInvalid(Message.get(GOLD) + " " + Message.get(MEDAL_COUNT))
                     .getResult();
 
             int silverMedalCountInt = SyntaxValidator.validateInt(silverMedalCount)
                     .isInRange(0, 1)
-                    .throwIfInvalid("silver medal count")
+                    .throwIfInvalid(Message.get(SILVER) + " " + Message.get(MEDAL_COUNT))
                     .getResult();
 
             int bronzeMedalCountInt = SyntaxValidator.validateInt(bronzeMedalCount)
                     .isInRange(0, 1)
-                    .throwIfInvalid("bronze medal count")
+                    .throwIfInvalid(Message.get(BRONZE) + " " + Message.get(MEDAL_COUNT))
                     .getResult();
 
             if (goldMedalCountInt + silverMedalCountInt + bronzeMedalCountInt > 1) {
-                throw new ParserException(Message.getChained(TOO_MANY_MEDALS));
+                throw new ParserException(Message.get(TOO_MANY_MEDALS));
             }
 
             Athlete athlete = new Athlete(athleteIdInt);
@@ -86,7 +86,7 @@ public class CompetitionParser implements IParser<Competition> {
 
             return new Competition(athlete, yearInt, iocCode, olympicSport, medal);
         } catch (ValidationException validationException) {
-            throw new ParserException(validationException.getMessage());
+            throw new ParserException(Message.get(COMPETITION), validationException);
         }
     }
 }

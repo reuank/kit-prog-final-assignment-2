@@ -1,8 +1,12 @@
 package task.validation;
 
+import task.lang.Message;
+
+import static task.lang.Message.OR;
+
 /**
- * In a ValidationResult, all the messages of a validation getFormatted stored, so that a complete validation can happen
- * before the error message gets printed.
+ * In a ValidationResult, all the messages of a validation getOwnFormatted stored, so that a complete validation
+ * can happen before the error message gets printed.
  */
 public class ValidationResult {
     private boolean failed;
@@ -23,7 +27,7 @@ public class ValidationResult {
      */
     public void addValidationError(String message) {
         this.failed = true;
-        this.message.append(this.message.toString().equals("") ? message : " and " + message);
+        this.message.append(this.message.toString().equals("") ? message : Message.get(OR) + message);
     }
 
     /**

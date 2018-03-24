@@ -6,7 +6,9 @@ import task.userinterface.auth.Session;
 
 import java.util.List;
 
-
+/**
+ * An interface for restricted commands.
+ */
 public interface IRestrictedCommand extends IExecutableCommand {
     @Override
     default void executeCommand(ICommand command, List<String> outputStream) throws IllegalCallOfCommandException {

@@ -10,7 +10,7 @@ import task.userinterface.CLI;
 import java.util.List;
 
 /**
- *
+ * The quit command
  */
 public class QuitCommand implements IExecutableCommand {
     private CLI userInterface;

@@ -115,7 +115,7 @@ public class StringValidation {
         }
 
         if (!this.validateMe.matches(regex)) {
-            return addError(Message.getChained(DOES_NOT_MATCH_REQUIREMENTS));
+            return addError(Message.get(DOES_NOT_MATCH_REQUIREMENTS));
         }
 
         return this;
@@ -128,7 +128,7 @@ public class StringValidation {
      */
     public StringValidation isOnlyLetters() {
         if (!this.validateMe.matches("[a-zA-Z]+")) {
-            return addError(Message.getChained(SHOULD_ONLY_CONTAIN_LETTERS));
+            return addError(Message.get(SHOULD_ONLY_CONTAIN_LETTERS));
         }
 
         return this;
@@ -183,7 +183,7 @@ public class StringValidation {
             }
         }
 
-        String setRepresentation = Arrays.stream(set).collect(Collectors.joining(" " + Message.getChained(OR) + " "));
+        String setRepresentation = Arrays.stream(set).collect(Collectors.joining(" " + Message.get(OR) + " "));
 
         return addError(Message.get(SHOULD_BE_EITHER, setRepresentation));
     }
@@ -208,7 +208,7 @@ public class StringValidation {
      *
      * @return Returns true if an error occurred so far.
      */
-    public boolean hasFailed() {
+    private boolean hasFailed() {
         return this.validationResult.failed();
     }
 
@@ -217,7 +217,7 @@ public class StringValidation {
      *
      * @return The error messages.
      */
-    public String getErrors() {
+    private String getErrors() {
         return this.validationResult.getMessage();
     }
 

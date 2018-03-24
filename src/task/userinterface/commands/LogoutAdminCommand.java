@@ -1,7 +1,6 @@
 package task.userinterface.commands;
 
 import task.constructs.commands.CommandSignature;
-import task.exceptions.IllegalCallOfCommandException;
 import task.exceptions.ValidationException;
 import task.interfaces.ICommand;
 import task.interfaces.IRestrictedCommand;
@@ -15,7 +14,7 @@ import static task.userinterface.auth.Permission.MUST_BE_ADMIN;
 import static task.userinterface.auth.Permission.MUST_BE_LOGGED_IN;
 
 /**
- *
+ * The logout admin command
  */
 public class LogoutAdminCommand implements IRestrictedCommand {
     private CLI userInterface;

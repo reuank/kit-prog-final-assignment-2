@@ -123,15 +123,11 @@ public class CLI implements IUserInterface {
      */
     private void process(ICommand passedCommand) throws IllegalCallOfCommandException, CommandUndefinedException {
         if (commandIsRegistered(passedCommand)) {
-            // Lookup of the executable command that belongs to the passed command.
             IExecutableCommand correspondingCommand = this.commandRegister.get(passedCommand.getSlug());
 
-            // Pass the passed command over to the corresponding executable command
-            // for further validation and final execution.
             List<String> outputStream = new ArrayList<>();
             correspondingCommand.tryToExecute(passedCommand, outputStream);
 
-            // Show all messages that have been generated within the command
             flushOutput(outputStream);
         } else {
             throw new CommandUndefinedException(
@@ -194,7 +190,7 @@ public class CLI implements IUserInterface {
      * Used for outputting errors via the command line.
      * @param message The error that shall be printed.
      */
-    public void outputError(String message) {
+    private void outputError(String message) {
         Terminal.printError(message);
     }
 

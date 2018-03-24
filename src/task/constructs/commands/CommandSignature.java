@@ -25,9 +25,9 @@ public class CommandSignature {
 
     private String serialize() {
         StringBuilder commandSignature = new StringBuilder();
-        commandSignature.append(this.slug + " ");
+        commandSignature.append(this.slug).append(" ");
         for (int i = 0; i < this.args.length; i++) {
-            commandSignature.append(this.args[i].getArgName()); //+ ":" + this.args[i].getArgType().toString());
+            commandSignature.append(this.args[i].getArgName());
             commandSignature.append(i < this.args.length - 1 ? ";" : "");
         }
 
@@ -66,7 +66,7 @@ public class CommandSignature {
      *
      * @return Returns true if there are arguments.
      */
-    public boolean hasArguments() {
+    private boolean hasArguments() {
         return getArgCount() > 0;
     }
 
@@ -77,16 +77,6 @@ public class CommandSignature {
      */
     public int getArgCount() {
         return (this.args == null) ? 0 : this.args.length;
-    }
-
-    /**
-     * Gets the datatype of the argument at a database position in the argument list.
-     *
-     * @param index the index of the argument of which the datatype shall be returned.
-     * @return The datatype of the argument.
-     */
-    public Datatype getArgType(int index) {
-        return hasArguments() ? this.args[index].getArgType() : null;
     }
 
     /**
@@ -108,10 +98,14 @@ public class CommandSignature {
         return null;
     }
 
+    private Datatype getArgType(int index) {
+        return hasArguments() ? this.args[index].getArgType() : null;
+    }
+
     /**
-     * Used to getFormatted the name of the actual parameter.
+     * Used to getOwnFormatted the name of the actual parameter.
      *
-     * @param index the index of the parameter name you want to getFormatted.
+     * @param index the index of the parameter name you want to getOwnFormatted.
      * @return Returns the name of the parameter at the given index.
      */
     public String getArgName(int index) {

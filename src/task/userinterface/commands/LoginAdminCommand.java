@@ -16,7 +16,7 @@ import static task.constructs.commands.Datatype.STRING;
 import static task.userinterface.auth.Permission.MUST_BE_LOGGED_OUT;
 
 /**
- *
+ * The login admin command
  */
 public class LoginAdminCommand implements IRestrictedCommand {
     private CLI userInterface;

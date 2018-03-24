@@ -13,10 +13,11 @@ public class ParserException extends IllegalCallOfCommandException {
      * Instantiates an exception that shall be thrown if the passed input data could not be parsed to a database object.
      *
      * @param paramName The name of the parameter that was tried to be parsed.
-     * @param exception The exception message.
+     * @param valEx The validation exception.
      */
-    public ParserException(String paramName, String exception) {
-        super(Message.get(THE_$STRING$_COULD_NOT_BE_PARSED, paramName) + Message.get(BECAUSE_$STRING$, exception));
+    public ParserException(String paramName, ValidationException valEx) {
+        super(Message.get(THE_$STRING$_COULD_NOT_BE_PARSED, paramName) + " "
+                + Message.get(BECAUSE_$STRING$, valEx.getMessage()));
     }
 
     /**

@@ -3,8 +3,11 @@ package task.olympia.parser.types;
 import task.exceptions.ParserException;
 import task.exceptions.ValidationException;
 import task.interfaces.IParser;
+import task.lang.Message;
 import task.olympia.models.SportsVenue;
 import task.validation.SyntaxValidator;
+
+import static task.lang.Message.*;
 
 public class SportsVenueParser implements IParser {
     @Override
@@ -13,7 +16,7 @@ public class SportsVenueParser implements IParser {
             SyntaxValidator.validateArray(args)
                     .isNotEmpty()
                     .isOfLength(6)
-                    .throwIfInvalid("the sports venue data");
+                    .throwIfInvalid(Message.get(SPORTS_VENUE) + " " + Message.get(DATA));
 
             String venueId = args[0];
             String countryName = args[1];
@@ -26,34 +29,34 @@ public class SportsVenueParser implements IParser {
                     .isNotNull()
                     .isNotEmpty()
                     .isOfLength(3)
-                    .throwIfInvalid("the sports venue Id");
+                    .throwIfInvalid(Message.get(SPORTS_VENUE) + " " + Message.get(ID));
 
             int venueIdInt = SyntaxValidator.validateInt(venueId)
                     .isPositive()
                     .isInRange(1, 999)
-                    .throwIfInvalid("the sports venue id")
+                    .throwIfInvalid(Message.get(SPORTS_VENUE) + " " + Message.get(ID))
                     .getResult();
 
             SyntaxValidator.validateString(openingYear)
                     .isNotNull()
                     .isNotEmpty()
                     .isOfLength(4)
-                    .throwIfInvalid("the opening year");
+                    .throwIfInvalid(Message.get(YEAR));
 
             int openingYearInt = SyntaxValidator.validateInt(openingYear)
                     .isPositive()
                     .isInRange(0, 9999)
-                    .throwIfInvalid("the opening year")
+                    .throwIfInvalid(Message.get(YEAR))
                     .getResult();
 
             int seatCountInt = SyntaxValidator.validateInt(seatCount)
                     .isPositive()
-                    .throwIfInvalid("the seat count")
+                    .throwIfInvalid(Message.get(SEAT_COUNT))
                     .getResult();
 
             return new SportsVenue(venueIdInt, countryName, location, name, openingYearInt, seatCountInt);
         } catch (ValidationException validationException) {
-            throw new ParserException(validationException.getMessage());
+            throw new ParserException(Message.get(SPORTS_VENUE), validationException);
         }
     }
 }

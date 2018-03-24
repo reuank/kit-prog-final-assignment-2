@@ -2,13 +2,15 @@ package task.userinterface.auth;
 
 import task.exceptions.AuthException;
 import task.lang.Message;
-import task.userinterface.models.UserGroup;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import static task.lang.Message.*;
 
+/**
+ * Permissions are used to control access to restricted commands
+ */
 public enum Permission {
     /**
      * When a user have to be logged in.
@@ -47,7 +49,6 @@ public enum Permission {
      *
      * @param requiredPermissions The required permissions.
      * @param session The session.
-     * @return - returns true if all permissions are assigned.
      * @throws AuthException thrown if not all permissions are assigned.
      */
     public static void requirePermissions(Permission[] requiredPermissions, Session session) throws AuthException {
@@ -59,7 +60,7 @@ public enum Permission {
                 .filter(requiredPermission -> !requiredPermission.assignedTo(session))
                 .map(Permission::getMessage)
                 .collect(Collectors.joining(
-                        Message.getFormatted(" " + AND.get() + " "), "", "."
+                        Message.getOwnFormatted(" " + AND.get() + " "), "", "."
                 ));
 
         throw new AuthException(exception);

@@ -45,12 +45,12 @@ public class Inserter {
 
         if (matchingAthlete != null) {
             if (!athlete.equals(matchingAthlete)) {
-                throw new DatabaseException(Message.getOwn("this athlete exists but holds other data"));
+                throw new DatabaseException(Message.get(ATHLETE_EXISTS_BUT_MISMATCH));
             }
 
             if (matchingAthlete.practicesOlympicSport(matchingOlympicSport)) {
                 throw new DatabaseException(
-                        Message.getOwn(THIS_$STRING$_ALREADY_EXISTS, "athlete-olympic sport combination")
+                        Message.get(THIS_$STRING$_ALREADY_EXISTS, ATHLETE_SPORTS_COMBO.get())
                 );
             }
 
@@ -139,7 +139,7 @@ public class Inserter {
 
     private <T extends Model> void requireHard(T item, Message paramName) throws DatabaseException {
         if (item == null) {
-            throw new DatabaseException(Message.get(NOT_EXISTENT, paramName.get()));
+            throw new DatabaseException(Message.get(THIS_$STING$_IS_NOT_EXISTENT, paramName.get()));
         }
     }
 
