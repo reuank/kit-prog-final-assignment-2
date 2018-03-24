@@ -7,7 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * User for serializing the athlete summary.
+ */
 public class SummaryAthletesSerializer implements IListSerializer<AthleteSummaryEntry, String> {
+    /**
+     * Instantiates a new SummaryAthletesSerializer
+     */
     public SummaryAthletesSerializer() {
     }
 
@@ -16,7 +22,7 @@ public class SummaryAthletesSerializer implements IListSerializer<AthleteSummary
         return list == null ? new ArrayList<>() : list.stream().map(this::serializeOne).collect(Collectors.toList());
     }
 
-    public String serializeOne(AthleteSummaryEntry item) {
+    private String serializeOne(AthleteSummaryEntry item) {
         return String.format("%04d %s %s %d",
                 item.getId(),
                 item.getFirstName(),

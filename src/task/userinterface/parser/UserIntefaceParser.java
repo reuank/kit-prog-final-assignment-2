@@ -13,6 +13,7 @@ public class UserIntefaceParser {
 
     /**
      * Parses an input String to a new Command object.
+     *
      * @param input The String that shall be parsed to a command object.
      * @return Returns a new Command object if the parsing was successful.
      * @throws ParserException Thrown if parsing failed due to an invalid structure of the provided input data.
@@ -23,6 +24,7 @@ public class UserIntefaceParser {
 
     /**
      * Parses an input String array to a new Command object.
+     *
      * @param inputArray The String array that shall be parsed, consisting of at least the command slug.
      * @return Returns a new Command object if the parsing was successful.
      * @throws ParserException Thrown if parsing failed due to an invalid structure of the provided input data.
@@ -31,13 +33,21 @@ public class UserIntefaceParser {
         return commandParser.parse(inputArray);
     }
 
-    public User parseUser(String... args) throws ParserException {
-        return userParser.parse(args);
-    }
-
+    /**
+     * Parses an input String array to a new user object.
+     *
+     * @param userGroup The user group the user shall be assigned to.
+     * @param args The String array that shall be parsed, consisting of at least the command slug.
+     * @return Returns a new user object if the parsing was successful.
+     * @throws ParserException Thrown if parsing failed due to an invalid structure of the provided input data.
+     */
     public User parseUser(UserGroup userGroup, String... args) throws ParserException {
         User user = parseUser(args);
         user.setUserGroup(userGroup);
         return user;
+    }
+
+    private User parseUser(String... args) throws ParserException {
+        return userParser.parse(args);
     }
 }

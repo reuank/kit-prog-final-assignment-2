@@ -15,8 +15,17 @@ public class OlympicSportParser implements IParser<OlympicSport> {
                     .isOfLength(2)
                     .throwIfInvalid("the olympic sport data");
 
-            String sportType = args[0];
-            String sportDiscipline = args[1];
+            String sportType = SyntaxValidator.validateString(args[0])
+                    .isNotNull()
+                    .isNotEmpty()
+                    .throwIfInvalid("the sport type")
+                    .getResult();
+
+            String sportDiscipline = SyntaxValidator.validateString(args[1])
+                    .isNotNull()
+                    .isNotEmpty()
+                    .throwIfInvalid("the sport discipline")
+                    .getResult();
 
             return new OlympicSport(sportType, sportDiscipline);
         } catch (ValidationException validationException) {

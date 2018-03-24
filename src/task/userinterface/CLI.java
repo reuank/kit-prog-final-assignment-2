@@ -4,11 +4,12 @@ import edu.kit.informatik.Terminal;
 import task.constructs.database.Database;
 import task.exceptions.AuthException;
 import task.exceptions.CommandUndefinedException;
-import task.exceptions.InvalidCallOfCommandException;
+import task.exceptions.IllegalCallOfCommandException;
 import task.exceptions.ParserException;
 import task.interfaces.ICommand;
 import task.interfaces.IExecutableCommand;
 import task.interfaces.IUserInterface;
+import task.lang.Message;
 import task.userinterface.auth.AccountManager;
 import task.userinterface.auth.Session;
 import task.userinterface.models.User;
@@ -37,6 +38,8 @@ public class CLI implements IUserInterface {
     /**
      * Creates a new Command Line Interface.
      * @param uiParser The injected parser that shall be used by the interface.
+     * @param inputValidator the input validator.
+     * @param userDatabase the user database.
      */
     public CLI(UserIntefaceParser uiParser, InputValidator inputValidator, Database userDatabase) {
         this.uiParser = uiParser;
@@ -70,7 +73,7 @@ public class CLI implements IUserInterface {
             try {
                 ICommand inputCommand = this.uiParser.parseCommand(input());
                 process(inputCommand);
-            } catch (ParserException | InvalidCallOfCommandException exception) {
+            } catch (CommandUndefinedException | IllegalCallOfCommandException exception) {
                 this.outputError(exception.getMessage());
             }
         }
@@ -86,29 +89,40 @@ public class CLI implements IUserInterface {
         this.isRunning = false;
     }
 
-    public boolean registerUser(User newUser) throws AuthException {
+    /**
+     * Tries to register a new user.
+     * @param newUser the new user.
+     * @return returns true if the registration was successful.
+     * @throws AuthException thrown if the registration failed, thus the user already exists.
+     */
+    public boolean tryRegisterUser(User newUser) throws AuthException {
         return this.accountManager.tryRegister(newUser);
     }
 
-    public void login(String username, String password) throws AuthException {
+    /**
+     * Tries to login a user.
+     * @param username the username.
+     * @param password the password.
+     * @throws AuthException thrown if the credentials are wrong.
+     */
+    public void tryLogin(String username, String password) throws AuthException {
         this.accountManager.tryLogin(username, password);
     }
 
+    /**
+     * Logs out the current user.
+     */
     public void logout() {
         this.accountManager.logout();
-    }
-
-    public boolean isLoggedIn() {
-        return this.session.exists();
     }
 
     /**
      * Processes a command, which means passing the command data to the corresponding executable command class.
      * @param passedCommand The command that shall be executed.
      * @throws CommandUndefinedException Thrown if the command is not registered.
-     * @throws InvalidCallOfCommandException Thrown if anything went wrong during the execution of the command.
+     * @throws IllegalCallOfCommandException Thrown if anything went wrong during the execution of the command.
      */
-    private void process(ICommand passedCommand) throws InvalidCallOfCommandException {
+    private void process(ICommand passedCommand) throws IllegalCallOfCommandException, CommandUndefinedException {
         if (commandIsRegistered(passedCommand)) {
             // Lookup of the executable command that belongs to the passed command.
             IExecutableCommand correspondingCommand = this.commandRegister.get(passedCommand.getSlug());
@@ -121,7 +135,9 @@ public class CLI implements IUserInterface {
             // Show all messages that have been generated within the command
             flushOutput(outputStream);
         } else {
-            throw new InvalidCallOfCommandException("the command \"" + passedCommand.getSlug() + "\" is not defined.");
+            throw new CommandUndefinedException(
+                    Message.get(Message.COMMAND_$STRING$_UNDEFINED, passedCommand.getSlug())
+            );
         }
     }
 
@@ -135,8 +151,11 @@ public class CLI implements IUserInterface {
     }
 
 
+    /**
+     * @return - returns the inputValidator.
+     **/
     public InputValidator getInputValidator() {
-        return this.inputValidator;
+        return inputValidator;
     }
 
     /**
@@ -147,8 +166,11 @@ public class CLI implements IUserInterface {
         return this.uiParser;
     }
 
+    /**
+     * @return - returns the session
+     **/
     public Session getSession() {
-        return this.session;
+        return session;
     }
 
     /**

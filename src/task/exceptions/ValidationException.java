@@ -3,7 +3,7 @@ package task.exceptions;
 /**
  * The exception thrown if the validation process failed.
  */
-public class ValidationException extends Exception {
+public class ValidationException extends IllegalCallOfCommandException {
     /**
      * Instantiates an exception that shall be thrown if the validation process failed.
      * @param exception The validation exception message that has been build during the validation process.

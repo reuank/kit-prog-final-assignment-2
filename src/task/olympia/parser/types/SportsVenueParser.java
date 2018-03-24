@@ -24,6 +24,7 @@ public class SportsVenueParser implements IParser {
 
             SyntaxValidator.validateString(venueId)
                     .isNotNull()
+                    .isNotEmpty()
                     .isOfLength(3)
                     .throwIfInvalid("the sports venue Id");
 
@@ -35,6 +36,7 @@ public class SportsVenueParser implements IParser {
 
             SyntaxValidator.validateString(openingYear)
                     .isNotNull()
+                    .isNotEmpty()
                     .isOfLength(4)
                     .throwIfInvalid("the opening year");
 

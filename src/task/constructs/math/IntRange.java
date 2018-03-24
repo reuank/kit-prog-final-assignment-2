@@ -23,7 +23,7 @@ public class IntRange {
      * Gets the lower bound of the range.
      * @return Returns the lower bound.
      */
-    public int getLowerBound() {
+    public int getLower() {
         return lowerBound;
     }
 
@@ -31,7 +31,7 @@ public class IntRange {
      * Gets the upper bound of the range.
      * @return Returns the upper bound.
      */
-    public int getUpperBound() {
+    public int getUpper() {
         return upperBound;
     }
 
@@ -42,7 +42,7 @@ public class IntRange {
      * Sets the lower (included) bound of the Integer range.
      * @param lowerBound The new (included) lower bound of the range.
      */
-    public void setLowerBound(int lowerBound) {
+    public void setLower(int lowerBound) {
         this.lowerBound = lowerBound;
     }
 
@@ -50,7 +50,7 @@ public class IntRange {
      * Sets the upper (included) bound of the Integer range.
      * @param upperBound The new (included) upper bound of the range.
      */
-    public void setUpperBound(int upperBound) {
+    public void setUpper(int upperBound) {
         this.upperBound = upperBound;
     }
 }

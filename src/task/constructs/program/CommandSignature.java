@@ -13,6 +13,9 @@ public class CommandSignature {
 
     /**
      * Instantiates a new command signature.
+     *
+     * @param slug the slug of the command.
+     * @param arguments the argument list that belongs to the signature.
      */
     public CommandSignature(String slug, Argument... arguments) {
         this.slug = slug;
@@ -23,7 +26,7 @@ public class CommandSignature {
     private String serialize() {
         StringBuilder commandSignature = new StringBuilder();
         commandSignature.append(this.slug + " ");
-        for(int i = 0; i < this.args.length; i++) {
+        for (int i = 0; i < this.args.length; i++) {
             commandSignature.append(this.args[i].getArgName()); //+ ":" + this.args[i].getArgType().toString());
             commandSignature.append(i < this.args.length - 1 ? ";" : "");
         }
@@ -33,6 +36,7 @@ public class CommandSignature {
 
     /**
      * Reutns the actual signature.
+     *
      * @return The actual signature.
      */
     public String getCommandSignature() {
@@ -41,6 +45,7 @@ public class CommandSignature {
 
     /**
      * Gets the slug of the command signature.
+     *
      * @return Returns the slug.
      */
     public String getSlug() {
@@ -49,6 +54,7 @@ public class CommandSignature {
 
     /**
      * Gets all the arguments in the command signature, split into argument name and datatype.
+     *
      * @return Returns the argument structure as a two dimensional array.
      */
     public Argument[] getArgs() {
@@ -57,6 +63,7 @@ public class CommandSignature {
 
     /**
      * Checks if there are any arguments in the signature.
+     *
      * @return Returns true if there are arguments.
      */
     public boolean hasArguments() {
@@ -65,6 +72,7 @@ public class CommandSignature {
 
     /**
      * Gets the number of arguments that belong to this signature.
+     *
      * @return Returns the number of arguments that belong to this command signature.
      */
     public int getArgCount() {
@@ -73,6 +81,7 @@ public class CommandSignature {
 
     /**
      * Gets the datatype of the argument at a database position in the argument list.
+     *
      * @param index the index of the argument of which the datatype shall be returned.
      * @return The datatype of the argument.
      */
@@ -82,6 +91,7 @@ public class CommandSignature {
 
     /**
      * Gets all the datatypes of the arguments as an array.
+     *
      * @return Returns an array of all the argument types of the command signature.
      */
     public Datatype[] getArgTypes() {
@@ -99,8 +109,9 @@ public class CommandSignature {
     }
 
     /**
-     * Used to get the name of the actual parameter.
-     * @param index the index of the parameter name you want to get.
+     * Used to getFormatted the name of the actual parameter.
+     *
+     * @param index the index of the parameter name you want to getFormatted.
      * @return Returns the name of the parameter at the given index.
      */
     public String getArgName(int index) {
@@ -119,6 +130,7 @@ public class CommandSignature {
 
     /**
      * Gets the human readable argument names.
+     *
      * @return Returns an array of all the argument names corresponding to this command signature.
      */
     public String[] getArgNames() {

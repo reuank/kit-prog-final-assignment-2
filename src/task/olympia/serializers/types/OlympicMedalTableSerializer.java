@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class OlympicMedalTableSerializer implements IListSerializer<OlympicMedalTableEntry, String>{
+public class OlympicMedalTableSerializer implements IListSerializer<OlympicMedalTableEntry, String> {
     @Override
     public List<String> serialize(List<OlympicMedalTableEntry> list) {
         return list == null ? new ArrayList<>() : IntStream.range(0, list.size())
@@ -17,7 +17,7 @@ public class OlympicMedalTableSerializer implements IListSerializer<OlympicMedal
                 .collect(Collectors.toList());
     }
 
-    public String serializeOne(int pos, OlympicMedalTableEntry item) {
+    private String serializeOne(int pos, OlympicMedalTableEntry item) {
         return String.format("(%d,%03d,%s,%s,%d,%d,%d,%d)",
                 pos,
                 item.getIocId(),

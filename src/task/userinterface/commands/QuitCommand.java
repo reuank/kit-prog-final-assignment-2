@@ -1,9 +1,8 @@
 package task.userinterface.commands;
 
 import task.constructs.program.CommandSignature;
-import task.exceptions.InvalidCallOfCommandException;
+import task.exceptions.IllegalCallOfCommandException;
 import task.exceptions.ValidationException;
-import task.userinterface.validation.InputValidator;
 import task.interfaces.ICommand;
 import task.interfaces.IExecutableCommand;
 import task.userinterface.CLI;
@@ -26,13 +25,13 @@ public class QuitCommand implements IExecutableCommand {
     }
 
     @Override
-    public void tryToExecute(ICommand command, List<String> outputStream) throws InvalidCallOfCommandException {
+    public void tryToExecute(ICommand command, List<String> outputStream) throws IllegalCallOfCommandException {
         try {
             this.userInterface.getInputValidator().validateCommand(command, this.commandSignature);
 
             userInterface.stop();
         } catch (ValidationException validationException) {
-            throw new InvalidCallOfCommandException(
+            throw new IllegalCallOfCommandException(
                     command.getSlug(),
                     this.commandSignature.getCommandSignature(),
                     validationException.getMessage()
@@ -40,18 +39,11 @@ public class QuitCommand implements IExecutableCommand {
         }
     }
 
+    /**
+     * @return - returns the commandSignature
+     * */
     @Override
-    public String getSlug() {
-        return this.commandSignature.getSlug();
-    }
-
-    @Override
-    public String[] getArgs() {
-        return this.commandSignature.getArgNames();
-    }
-
-    @Override
-    public String getArg(int index) {
-        return null;
+    public CommandSignature getCommandSignature() {
+        return this.commandSignature;
     }
 }

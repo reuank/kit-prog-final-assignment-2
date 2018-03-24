@@ -2,6 +2,17 @@ package task.interfaces;
 
 import java.util.List;
 
-public interface IListSerializer<T, D> {
-    List<D> serialize(List<T> list);
+/**
+ * An interface for list serializer.
+ *
+ * @param <T> The type.
+ * @param <R> The return list type (normally string).
+ */
+public interface IListSerializer<T, R> {
+    /**
+     * Serializes a T-List to a R-List (R = String mostly)
+     * @param list the T-list that shall be serialized.
+     * @return returns the serialized list.
+     */
+    List<R> serialize(List<T> list);
 }

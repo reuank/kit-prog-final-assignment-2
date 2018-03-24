@@ -10,17 +10,66 @@ import java.util.stream.Collectors;
 import static task.lang.Message.*;
 
 public enum Permission {
+    /**
+     * When a user have to be logged in.
+     */
     MUST_BE_LOGGED_IN (Message.get(Message.NOT_LOGGED_IN)),
+
+    /**
+     * When a user has to be an admin.
+     */
     MUST_BE_ADMIN (Message.get(Message.GROUP_$STRING$_REQUIRED, Message.get(ADMIN))),
+
+    /**
+     * When no user shall be logged in already.
+     */
     MUST_BE_LOGGED_OUT (Message.get(Message.ALREADY_LOGGED_IN));
 
     private String message;
 
+    /**
+     * Instantiates a nes permission.
+     * @param message the error message that is printed if the right is not assigned.
+     */
     Permission(String message) {
         this.message = message;
     }
 
-    public boolean assignedTo(Session session) {
+    /**
+     * @return - returns the error message that is assigned to the permission.
+     */
+    public String getMessage() {
+        return this.message;
+    }
+
+    /**
+     * Checks whether all permissions are assigned to the session.
+     *
+     * @param requiredPermissions The required permissions.
+     * @param session The session.
+     * @return - returns true if all permissions are assigned.
+     * @throws AuthException thrown if not all permissions are assigned.
+     */
+    public static boolean requirePermissions(Permission[] requiredPermissions, Session session) throws AuthException {
+        if (requiredPermissions == null) {
+            return true;
+        }
+
+        if (Arrays.stream(requiredPermissions).allMatch(perm -> perm.assignedTo(session))) {
+            return true;
+        }
+
+        String exception = Arrays.stream(requiredPermissions)
+                .filter(requiredPermission -> !requiredPermission.assignedTo(session))
+                .map(Permission::getMessage)
+                .collect(Collectors.joining(
+                        Message.getFormatted(" " + AND.get() + " "), "", "."
+                ));
+
+        throw new AuthException(exception);
+    }
+
+    private boolean assignedTo(Session session) {
         if (!session.exists() && this != MUST_BE_LOGGED_OUT) {
             return false;
         }
@@ -35,25 +84,5 @@ public enum Permission {
             default:
                 return false;
         }
-    }
-
-    public String getMessage() {
-        return this.message;
-    }
-
-    public static boolean hasAllPermissions(Permission[] requiredPermissions, Session session) throws AuthException {
-        if (Arrays.stream(requiredPermissions).allMatch(perm -> perm.assignedTo(session))) {
-            return true;
-        }
-
-        String exception = Arrays.stream(requiredPermissions)
-                .filter(requiredPermission -> !requiredPermission.assignedTo(session))
-                .map(Permission::getMessage)
-                .collect(Collectors.joining(
-                        Message.get(" " + AND.get() + " "), "", "."
-                ));
-
-        throw new AuthException(exception);
-
     }
 }

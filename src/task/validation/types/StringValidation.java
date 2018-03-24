@@ -1,6 +1,6 @@
 package task.validation.types;
 
-import task.constructs.program.ValidationResult;
+import task.validation.ValidationResult;
 import task.exceptions.ValidationException;
 import task.lang.Message;
 
@@ -18,6 +18,7 @@ public class StringValidation {
 
     /**
      * Instantiates a new String validation, in which all the sub-validations can be chained together.
+     *
      * @param validateMe The String that shall be validated.
      */
     public StringValidation(String validateMe) {
@@ -27,12 +28,13 @@ public class StringValidation {
 
     /**
      * Checks whether the String is exactly "twin".
+     *
      * @param twin The String that shall be checked for equality.
      * @return Returns the current Validation object, so that other validation can be applied.
      */
     public StringValidation isExactly(String twin) {
         if ( !this.validateMe.equals(twin)) {
-            return addError(String.format("should be exactly %s", twin));
+            return addError(Message.get(SHOULD_BE_EXACTLY_$STRING$, twin));
         }
 
         return this;
@@ -40,11 +42,25 @@ public class StringValidation {
 
     /**
      * Checks whether the String is not null.
+     *
      * @return Returns the validation object if there is something in the array, else it adds an error message as well.
      */
     public StringValidation isNotNull() {
         if (validateMe == null) {
-            return addError("should not be null");
+            return addError(Message.get(SHOULD_NOT_BE_NULL));
+        }
+
+        return this;
+    }
+
+    /**
+     * Checks whether the String is empty.
+     *
+     * @return Returns the validation object if there is something in the array, else it adds an error message as well.
+     */
+    public StringValidation isNotEmpty() {
+        if (validateMe.equals("")) {
+            return addError(Message.get(SHOULD_NOT_BE_EMPTY));
         }
 
         return this;
@@ -52,6 +68,7 @@ public class StringValidation {
 
     /**
      * Checks whether the String-arrays length is in the given bounds. Adds an error if necessary.
+     *
      * @param lowerBound The lower (included) bound of the size.
      * @param upperBound The upper (included) bound of the size.
      * @return  Returns the current Validation object, so that other validation can be applied.
@@ -68,7 +85,12 @@ public class StringValidation {
         return this;
     }
 
-
+    /**
+     * Checks whether the String-arrays has a specific length.
+     *
+     * @param length the length.
+     * @return Returns the current Validation object, so that other validation can be applied.
+     */
     public StringValidation isOfLength(int length) {
         if (this.validateMe == null && length == 0) {
             return this;
@@ -81,33 +103,40 @@ public class StringValidation {
         return this;
     }
 
-
+    /**
+     * Checks whether the String-arrays matches a regex.
+     *
+     * @param regex the regex.
+     * @return Returns the current Validation object, so that other validation can be applied.
+     */
     public StringValidation matches(String regex) {
         if (this.validateMe == null && regex == null) {
             return this;
         }
 
         if (!this.validateMe.matches(regex)) {
-            return addError(Message.get(INPUT_NOT_MATCHES_REQUIREMENTS));
+            return addError(Message.getChained(DOES_NOT_MATCH_REQUIREMENTS));
         }
 
         return this;
     }
 
+    /**
+     * Checks whether the String-arrays only contains letters.
+     *
+     * @return Returns the current Validation object, so that other validation can be applied.
+     */
     public StringValidation isOnlyLetters() {
         if (!this.validateMe.matches("[a-zA-Z]+")) {
-            return addError(Message.get(SHOULD_ONLY_CONTAIN_LETTERS));
+            return addError(Message.getChained(SHOULD_ONLY_CONTAIN_LETTERS));
         }
 
         return this;
-    }
-
-    public String getValidateMe() {
-        return validateMe;
     }
 
     /**
      * Checks whether the String contains a String value. Adds an error if necessary.
+     *
      * @param needle The String that shall be searched for.
      * @return Returns the current Validation object, so that other validation can be applied.
      */
@@ -125,6 +154,7 @@ public class StringValidation {
 
     /**
      * Checks whether the String contains a String value. Adds an error if necessary.
+     *
      * @param needle The String that shall be searched for.
      * @return Returns the current Validation object, so that other validation can be applied.
      */
@@ -142,6 +172,7 @@ public class StringValidation {
 
     /**
      * Checks whether the String is in a Set of Strings, represented by a String array.
+     *
      * @param set The String array the String shall be in.
      * @return Returns the current Validation object, so that other validation can be applied.
      */
@@ -152,13 +183,14 @@ public class StringValidation {
             }
         }
 
-        String setRepresentation = Arrays.stream(set).collect(Collectors.joining(" " + Message.get(OR) + " "));
+        String setRepresentation = Arrays.stream(set).collect(Collectors.joining(" " + Message.getChained(OR) + " "));
 
         return addError(Message.get(SHOULD_BE_EITHER, setRepresentation));
     }
 
     /**
      * Throws all collected errors, if there are any.
+     *
      * @param paramName The name of the validation object that shall occur in the error message.
      * @return Returns the current Validation object, so that other validation can be applied.
      * @throws ValidationException Thrown if any errors occurred so far.
@@ -173,6 +205,7 @@ public class StringValidation {
 
     /**
      * Checks if the validation has failed so far.
+     *
      * @return Returns true if an error occurred so far.
      */
     public boolean hasFailed() {
@@ -181,6 +214,7 @@ public class StringValidation {
 
     /**
      * Gets the error messages that have been chained together so far.
+     *
      * @return The error messages.
      */
     public String getErrors() {
@@ -189,6 +223,7 @@ public class StringValidation {
 
     /**
      * Adds an errorMessage message to the error-message String of the validation object.
+     *
      * @param errorMessage The message that shall be added.
      * @return Returns the current Validation object, so that other validation can be applied.
      */
@@ -203,6 +238,7 @@ public class StringValidation {
 
     /**
      * Returns the validated result.
+     *
      * @return The validated String.
      */
     public String getResult() {

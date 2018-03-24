@@ -8,7 +8,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * Serializes a sports venue list.
+ */
 public class SportsVenuesSerializer implements IListSerializer<SportsVenue, String> {
+    /**
+     * Instantiates a new SportsVenuesSerializer.
+     */
     public SportsVenuesSerializer() {
     }
 

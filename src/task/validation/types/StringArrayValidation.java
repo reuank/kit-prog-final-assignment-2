@@ -1,7 +1,7 @@
 package task.validation.types;
 
 import task.constructs.program.Datatype;
-import task.constructs.program.ValidationResult;
+import task.validation.ValidationResult;
 import task.lang.Message;
 import task.exceptions.ValidationException;
 import task.validation.SyntaxValidator;
@@ -33,7 +33,7 @@ public class StringArrayValidation {
      */
     public StringArrayValidation isNotNull() {
         if (this.validateMe == null) {
-            return addError(Message.get(SHOULD_NOT_BE_NULL));
+            return addError(Message.getChained(SHOULD_NOT_BE_NULL));
         }
 
         return this;
@@ -50,7 +50,7 @@ public class StringArrayValidation {
             }
         }
 
-        return addError(Message.get(SHOULD_NOT_BE_EMPTY));
+        return addError(Message.getChained(SHOULD_NOT_BE_EMPTY));
     }
 
     /**
@@ -60,7 +60,7 @@ public class StringArrayValidation {
      */
     public StringArrayValidation isLongerOrEqualThan(int length) {
         if (this.validateMe == null) {
-            return addError(Message.get(SHOULD_NOT_BE_NULL));
+            return addError(Message.getChained(SHOULD_NOT_BE_NULL));
         }
 
         if (this.validateMe.length <= length) {
@@ -155,12 +155,12 @@ public class StringArrayValidation {
                 return this;
             }
 
-            return addError(Message.get(VALIDATION_FAILED_CHECKING_TYPES));
+            return addError(Message.getChained(VALIDATION_FAILED_CHECKING_TYPES));
         }
 
         // Number of types to check not equals number of given types
         if (this.validateMe.length != argTypes.length) {
-            return addError(Message.get(VALIDATION_FAILED_CHECKING_TYPES));
+            return addError(Message.getChained(VALIDATION_FAILED_CHECKING_TYPES));
         }
 
         ArrayList<Integer> failedIntParams = new ArrayList<>();
@@ -173,10 +173,9 @@ public class StringArrayValidation {
                     }
                     break;
                 case STRING:
-                    //TODO Add String validations here
                     break;
                 default:
-                    throw new ValidationException(Message.get(UNDEFINED_DATATYPE));
+                    throw new ValidationException(Message.getChained(UNDEFINED_DATATYPE));
             }
         }
 
@@ -184,9 +183,9 @@ public class StringArrayValidation {
             String errorPhrase = failedIntParams.stream()
                     .map(Object::toString)
                     .collect(Collectors.joining(
-                            Message.get(" " + AND.get() + " "),
-                            Message.get(NUMBER),
-                            Message.get(IS_NOT_AN_INTEGER)
+                            Message.getFormatted(" " + AND.get() + " "),
+                            Message.getChained(NUMBER),
+                            Message.getChained(NOT_OF_TYPE_$STRING$, INTEGER)
                     ));
 
             addError(errorPhrase);

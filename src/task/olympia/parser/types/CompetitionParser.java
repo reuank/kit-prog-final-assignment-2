@@ -1,6 +1,5 @@
 package task.olympia.parser.types;
 
-import org.omg.CORBA.portable.ValueOutputStream;
 import task.exceptions.ParserException;
 import task.exceptions.ValidationException;
 import task.interfaces.IParser;
@@ -30,6 +29,7 @@ public class CompetitionParser implements IParser<Competition> {
 
             SyntaxValidator.validateString(athleteId)
                     .isNotNull()
+                    .isNotEmpty()
                     .isOfLength(4)
                     .throwIfInvalid("the athlete id");
 
@@ -47,14 +47,17 @@ public class CompetitionParser implements IParser<Competition> {
 
             SyntaxValidator.validateString(countryName)
                     .isNotNull()
+                    .isNotEmpty()
                     .throwIfInvalid("country name");
 
             SyntaxValidator.validateString(sportType)
                     .isNotNull()
+                    .isNotEmpty()
                     .throwIfInvalid("sport type");
 
             SyntaxValidator.validateString(sportDiscipline)
                     .isNotNull()
+                    .isNotEmpty()
                     .throwIfInvalid("sport discipline");
 
             int goldMedalCountInt = SyntaxValidator.validateInt(goldMedalCount)
@@ -73,7 +76,7 @@ public class CompetitionParser implements IParser<Competition> {
                     .getResult();
 
             if (goldMedalCountInt + silverMedalCountInt + bronzeMedalCountInt > 1) {
-                throw new ParserException(Message.get(TOO_MANY_MEDALS));
+                throw new ParserException(Message.getChained(TOO_MANY_MEDALS));
             }
 
             Athlete athlete = new Athlete(athleteIdInt);

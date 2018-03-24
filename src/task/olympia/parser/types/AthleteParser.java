@@ -25,6 +25,7 @@ public class AthleteParser implements IParser<Athlete> {
 
             SyntaxValidator.validateString(athleteId)
                     .isNotNull()
+                    .isNotEmpty()
                     .isOfLength(4)
                     .throwIfInvalid("the athlete id");
 
@@ -36,22 +37,27 @@ public class AthleteParser implements IParser<Athlete> {
 
             SyntaxValidator.validateString(firstname)
                     .isNotNull()
+                    .isNotEmpty()
                     .throwIfInvalid("firstname");
 
             SyntaxValidator.validateString(lastname)
                     .isNotNull()
+                    .isNotEmpty()
                     .throwIfInvalid("lastname");
 
             SyntaxValidator.validateString(countryName)
                     .isNotNull()
+                    .isNotEmpty()
                     .throwIfInvalid("country name");
 
             SyntaxValidator.validateString(sportType)
                     .isNotNull()
+                    .isNotEmpty()
                     .throwIfInvalid("sport type");
 
             SyntaxValidator.validateString(sportDiscipline)
                     .isNotNull()
+                    .isNotEmpty()
                     .throwIfInvalid("sport discipline");
 
             OlympicSport olympicSport =  new OlympicSport(sportType, sportDiscipline);

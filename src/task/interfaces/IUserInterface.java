@@ -1,7 +1,5 @@
 package task.interfaces;
 
-import task.userinterface.auth.Session;
-
 /**
  * An interface for user interfaces.
  */

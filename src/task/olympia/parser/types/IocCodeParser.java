@@ -22,7 +22,7 @@ public class IocCodeParser implements IParser {
 
             SyntaxValidator.validateString(iocId)
                     .isNotNull()
-                    .isNotContaining(";")
+                    .isNotEmpty()
                     .isOfLength(3)
                     .throwIfInvalid("the IOC-Id");
 
@@ -34,12 +34,13 @@ public class IocCodeParser implements IParser {
 
             SyntaxValidator.validateString(iocCode)
                     .isNotNull()
-                    .isOnlyLetters()
+                    .isNotEmpty()
                     .isOfLength(3)
                     .throwIfInvalid("the IOC code");
 
             SyntaxValidator.validateString(determinationYear)
                     .isNotNull()
+                    .isNotEmpty()
                     .isOfLength(4)
                     .throwIfInvalid("the determination year");
 

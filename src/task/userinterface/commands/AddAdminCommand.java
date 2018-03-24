@@ -2,14 +2,10 @@ package task.userinterface.commands;
 
 import task.constructs.program.Argument;
 import task.constructs.program.CommandSignature;
-import task.exceptions.AuthException;
-import task.exceptions.InvalidCallOfCommandException;
-import task.exceptions.ParserException;
-import task.exceptions.ValidationException;
-import task.userinterface.models.UserGroup;
+import task.exceptions.IllegalCallOfCommandException;
 import task.interfaces.ICommand;
-import task.interfaces.IExecutableCommand;
 import task.userinterface.CLI;
+import task.userinterface.auth.Permission;
 import task.userinterface.models.User;
 
 import java.util.List;
@@ -17,9 +13,9 @@ import java.util.List;
 import static task.constructs.program.Datatype.STRING;
 import static task.userinterface.models.UserGroup.ADMIN;
 
-public class AddAdminCommand implements IExecutableCommand {
+public class AddAdminCommand extends UiCommand {
     private CLI userInterface;
-    private UserGroup[] allowedUserGroups = {ADMIN};
+    private Permission[] requiredPermissions = new Permission[]{};
     private CommandSignature commandSignature = new CommandSignature(
             "add-admin",
             new Argument("firstname", STRING),
@@ -28,42 +24,41 @@ public class AddAdminCommand implements IExecutableCommand {
             new Argument("password", STRING)
     );
 
+    /**
+     * Instantiates a new add admin command.
+     * @param userInterface the user interface.
+     */
     public AddAdminCommand(CLI userInterface) {
         this.userInterface = userInterface;
     }
 
+
     @Override
-    public void tryToExecute(ICommand command, List<String> outputStream) throws InvalidCallOfCommandException {
-        try {
-            this.userInterface.getInputValidator().validateCommand(command, this.commandSignature);
+    void restrictedExecution(ICommand command, List<String> outputStream) throws IllegalCallOfCommandException {
+        User newUser = userInterface.getUiParser().parseUser(ADMIN, command.getArgs());
+        this.userInterface.tryRegisterUser(newUser);
 
-            User newUser = userInterface.getUiParser().parseUser(ADMIN, command.getArgs());
-            this.userInterface.registerUser(newUser);
+        outputStream.add("OK");
+    }
 
-            outputStream.add("OK");
-        } catch (ValidationException validationException) {
-            throw new InvalidCallOfCommandException(
-                    command.getSlug(),
-                    this.commandSignature.getCommandSignature(),
-                    validationException.getMessage()
-            );
-        } catch (ParserException | AuthException exception) {
-            throw new InvalidCallOfCommandException(exception.getMessage());
-        }
+    /**
+     * @return - returns the user interface
+     **/
+    @Override
+    public CLI getUi() {
+        return this.userInterface;
+    }
+
+    /**
+     * @return - returns the commandSignature
+     * */
+    @Override
+    public CommandSignature getCommandSignature() {
+        return this.commandSignature;
     }
 
     @Override
-    public String getSlug() {
-        return this.commandSignature.getSlug();
-    }
-
-    @Override
-    public String[] getArgs() {
-        return this.commandSignature.getArgNames();
-    }
-
-    @Override
-    public String getArg(int index) {
-        return this.commandSignature.getArgName(index);
+    public Permission[] getPermissionFlags() {
+        return this.requiredPermissions;
     }
 }

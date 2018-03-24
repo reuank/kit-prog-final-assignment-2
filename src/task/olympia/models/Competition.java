@@ -17,14 +17,6 @@ public class Competition extends Model {
         this.medal = medal;
     }
 
-    public Competition(Athlete athlete, int year, IocCode ioc, OlympicSport sport, int gold, int silver, int bronze) {
-        this.athlete = athlete;
-        this.year = year;
-        this.iocCode = ioc;
-        this.olympicSport = sport;
-        this.medal = Medal.getMedal(gold, silver, bronze);
-    }
-
     @Override
     public boolean equals(Object other) {
         return ((Competition) other).athlete.equals(this.athlete)
