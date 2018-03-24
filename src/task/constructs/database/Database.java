@@ -26,7 +26,7 @@ public class Database {
         }
     }
 
-    private void createTable(Table<? extends Model> table) {
+    private void createTable(Table<?> table) {
         this.tables.put(table.getType(), table);
     }
 
@@ -37,7 +37,10 @@ public class Database {
      * @param <T> The model class.
      * @return Returns the requested table.
      */
+    @SuppressWarnings("unchecked")
     public <T extends Model> Table<T> getTable(Class<T> tableClass) {
+        /* Note that, as the tables only get generated within the app itself and with no user interaction whatsoever,
+        this cast is always safe! Only Model-Tables are being instantiated in the app. */
         return (Table<T>) this.tables.get(tableClass);
     }
 }
