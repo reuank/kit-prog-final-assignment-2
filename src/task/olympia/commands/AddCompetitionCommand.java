@@ -1,24 +1,26 @@
 package task.olympia.commands;
 
-import task.constructs.program.Argument;
-import task.constructs.program.CommandSignature;
+import task.constructs.commands.Argument;
+import task.constructs.commands.CommandSignature;
+import task.interfaces.IRestrictedCommand;
 import task.exceptions.*;
 import task.olympia.OlympiaApplication;
 import task.olympia.models.Competition;
 import task.userinterface.auth.Permission;
 import task.interfaces.ICommand;
+import task.userinterface.auth.Session;
 
 import java.util.List;
 
-import static task.constructs.program.Datatype.INT;
-import static task.constructs.program.Datatype.STRING;
+import static task.constructs.commands.Datatype.INT;
+import static task.constructs.commands.Datatype.STRING;
 import static task.userinterface.auth.Permission.MUST_BE_ADMIN;
 import static task.userinterface.auth.Permission.MUST_BE_LOGGED_IN;
 
 /**
  * The Add competition command.
  */
-public class AddCompetitionCommand extends AppCommand {
+public class AddCompetitionCommand implements IRestrictedCommand {
     private OlympiaApplication app;
     private Permission[] requiredPermissions = new Permission[]{MUST_BE_LOGGED_IN, MUST_BE_ADMIN};
     private CommandSignature commandSignature = new CommandSignature(
@@ -42,24 +44,13 @@ public class AddCompetitionCommand extends AppCommand {
     }
 
     @Override
-    void restrictedExecution(ICommand command, List<String> outputStream) throws IllegalCallOfCommandException {
+    public void restrictedExecution(ICommand command, List<String> outputStream) throws IllegalCallOfCommandException {
         Competition competition = this.app.getParser().parseCompetition(command.getArgs());
         this.app.addCompetition(competition);
 
         outputStream.add("OK");
     }
 
-    /**
-     * @return - returns the app
-     **/
-    @Override
-    public OlympiaApplication getApp() {
-        return this.app;
-    }
-
-    /**
-     * @return - returns the commandSignature
-     * */
     @Override
     public CommandSignature getCommandSignature() {
         return this.commandSignature;
@@ -68,5 +59,15 @@ public class AddCompetitionCommand extends AppCommand {
     @Override
     public Permission[] getPermissionFlags() {
         return this.requiredPermissions;
+    }
+
+    @Override
+    public Session getSession() {
+        return this.app.getSession();
+    }
+
+    @Override
+    public void validateCommand(ICommand command) throws ValidationException {
+        this.app.getInputValidator().validateCommand(command, this.commandSignature);
     }
 }

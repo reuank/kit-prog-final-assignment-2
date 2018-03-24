@@ -3,9 +3,6 @@ package task.olympia.models;
 import task.constructs.database.Model;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.NavigableMap;
-import java.util.TreeMap;
 
 /**
  * The model for an athlete.

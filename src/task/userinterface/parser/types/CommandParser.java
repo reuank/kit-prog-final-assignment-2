@@ -1,6 +1,6 @@
 package task.userinterface.parser.types;
 
-import task.constructs.program.Command;
+import task.constructs.commands.Command;
 import task.exceptions.ParserException;
 import task.exceptions.ValidationException;
 import task.interfaces.ICommand;

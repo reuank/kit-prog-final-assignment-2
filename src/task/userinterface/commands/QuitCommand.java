@@ -1,6 +1,6 @@
 package task.userinterface.commands;
 
-import task.constructs.program.CommandSignature;
+import task.constructs.commands.CommandSignature;
 import task.exceptions.IllegalCallOfCommandException;
 import task.exceptions.ValidationException;
 import task.interfaces.ICommand;
@@ -25,23 +25,17 @@ public class QuitCommand implements IExecutableCommand {
     }
 
     @Override
-    public void tryToExecute(ICommand command, List<String> outputStream) throws IllegalCallOfCommandException {
-        try {
-            this.userInterface.getInputValidator().validateCommand(command, this.commandSignature);
+    public void executeCommand(ICommand command, List<String> outputStream) throws IllegalCallOfCommandException {
+        this.userInterface.getInputValidator().validateCommand(command, this.commandSignature);
 
-            userInterface.stop();
-        } catch (ValidationException validationException) {
-            throw new IllegalCallOfCommandException(
-                    command.getSlug(),
-                    this.commandSignature.getCommandSignature(),
-                    validationException.getMessage()
-            );
-        }
+        userInterface.stop();
     }
 
-    /**
-     * @return - returns the commandSignature
-     * */
+    @Override
+    public void validateCommand(ICommand command) throws ValidationException {
+        this.userInterface.getInputValidator().validateCommand(command, this.commandSignature);
+    }
+
     @Override
     public CommandSignature getCommandSignature() {
         return this.commandSignature;

@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * Serializes the olympic medal table
+ */
 public class OlympicMedalTableSerializer implements IListSerializer<OlympicMedalTableEntry, String> {
     @Override
     public List<String> serialize(List<OlympicMedalTableEntry> list) {

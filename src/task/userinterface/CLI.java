@@ -5,7 +5,6 @@ import task.constructs.database.Database;
 import task.exceptions.AuthException;
 import task.exceptions.CommandUndefinedException;
 import task.exceptions.IllegalCallOfCommandException;
-import task.exceptions.ParserException;
 import task.interfaces.ICommand;
 import task.interfaces.IExecutableCommand;
 import task.interfaces.IUserInterface;

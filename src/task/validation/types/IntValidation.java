@@ -1,6 +1,5 @@
 package task.validation.types;
 
-import task.constructs.math.IntRange;
 import task.lang.Message;
 import task.validation.ValidationResult;
 import task.exceptions.ValidationException;
@@ -63,23 +62,6 @@ public class IntValidation {
     public IntValidation isExactly(int twin) {
         if (this.validateMe != twin) {
             return addError(Message.get(SHOULD_BE_EXACTLY_$INT$, twin));
-        }
-
-        return this;
-    }
-
-    /**
-     * Checks whether the Integer is within an intRange.
-     *
-     * @param intRange The intRange with included lower and upper bound the Integer shall be within.
-     * @return Returns the current Validation object, so that other validation can be applied.
-     */
-    public IntValidation isInIntRange(IntRange intRange) {
-        if (this.validateMe < intRange.getLower() || this.validateMe > intRange.getUpper()) {
-            return addError(Message.get(SHOULD_BE_IN_BETWEEN_$INT$_AND_$INT$,
-                    intRange.getLower(),
-                    intRange.getUpper())
-            );
         }
 
         return this;

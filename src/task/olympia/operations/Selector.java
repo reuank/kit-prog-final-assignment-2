@@ -67,7 +67,10 @@ public class Selector {
     }
 
     /**
-     * @return Returns the sorted sports venues list
+     * Generates the sorted sports venues list by a country name.
+     * @param countryName the country name.
+     * @return returns the sported sports venues list.
+     * @throws DatabaseException thrown if the country was not found.
      */
     public List<SportsVenue> getSportsVenuesSorted(String countryName) throws DatabaseException {
         if (!countryNameExists(countryName)) {
@@ -96,7 +99,11 @@ public class Selector {
     }
 
     /**
-     * @return Returns the athlete summary
+     * Generates the athlete summary for an olympic sport.
+     *
+     * @param olympicSport the olympic sport.
+     * @return returns the athlete summary list.
+     * @throws DatabaseException thrown if the olympic sport was not found.
      */
     public List<AthleteSummaryEntry> getAthleteSummary(OlympicSport olympicSport) throws DatabaseException {
         if (!existsInTable(OlympicSport.class, olympicSport)) {
@@ -106,10 +113,10 @@ public class Selector {
         List<Athlete> relevantAthletesList = getAthletesBySport(olympicSport);
         List<AthleteSummaryEntry> athleteSummary = joinAthletesToSportMedals(relevantAthletesList, olympicSport);
 
-        Comparator<AthleteSummaryEntry> byMedalCount = Comparator.comparingInt(AthleteSummaryEntry::getMedalCount).reversed();
+        Comparator<AthleteSummaryEntry> byMedalCount = Comparator.comparingInt(AthleteSummaryEntry::getMedalCount);
         Comparator<AthleteSummaryEntry> byId = Comparator.comparingInt(AthleteSummaryEntry::getId);
 
-        athleteSummary.sort(byMedalCount.thenComparing(byId));
+        athleteSummary.sort(byMedalCount.reversed().thenComparing(byId));
 
         return athleteSummary;
     }

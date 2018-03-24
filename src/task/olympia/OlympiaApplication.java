@@ -1,10 +1,8 @@
 package task.olympia;
 
 import task.constructs.database.Database;
-import task.constructs.database.Model;
 import task.constructs.database.Table;
 import task.exceptions.DatabaseException;
-import task.lang.Message;
 import task.olympia.models.*;
 import task.olympia.operations.Inserter;
 import task.olympia.operations.Selector;
@@ -16,7 +14,6 @@ import task.userinterface.validation.InputValidator;
 import java.util.List;
 
 import static task.lang.Message.IOC_CODE;
-import static task.lang.Message.NOT_EXISTENT;
 import static task.lang.Message.OLYMPIC_SPORT;
 
 /**

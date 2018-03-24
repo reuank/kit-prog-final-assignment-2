@@ -27,17 +27,4 @@ public class IllegalCallOfCommandException extends Exception {
     public IllegalCallOfCommandException(Message exception) {
         super(exception.get());
     }
-
-    /**
-     * Instantiates a Exceptions that shall be thrown if a command was called without correct and executable parameters.
-     *
-     * @param slug The command slug of the command that was tried to be executed.
-     * @param signature The signature of the command that was tried to be executed.
-     * @param validationMessage The validation message that was generated during the semantic validation.
-     */
-    public IllegalCallOfCommandException(String slug, String signature, String validationMessage) {
-        super(Message.get(COMMAND_$STRING$_COULD_NOT_BE_EXECUTED, slug) + " "
-                        + Message.get(REQUIRED_COMMAND_SIGNATURE_IS_$STRING$, signature)
-                        + ", " + BUT.get() + " " + validationMessage);
-    }
 }

@@ -177,8 +177,8 @@ public class StringValidation {
      * @return Returns the current Validation object, so that other validation can be applied.
      */
     public StringValidation isInSet(String[] set) {
-        for (int i = 0; i < set.length; i++) {
-            if (set[i].equals(validateMe)) {
+        for (String single : set) {
+            if (single.equals(validateMe)) {
                 return this;
             }
         }

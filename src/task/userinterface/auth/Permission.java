@@ -50,14 +50,10 @@ public enum Permission {
      * @return - returns true if all permissions are assigned.
      * @throws AuthException thrown if not all permissions are assigned.
      */
-    public static boolean requirePermissions(Permission[] requiredPermissions, Session session) throws AuthException {
-        if (requiredPermissions == null) {
-            return true;
-        }
+    public static void requirePermissions(Permission[] requiredPermissions, Session session) throws AuthException {
+        if (requiredPermissions == null) return;
 
-        if (Arrays.stream(requiredPermissions).allMatch(perm -> perm.assignedTo(session))) {
-            return true;
-        }
+        if (Arrays.stream(requiredPermissions).allMatch(perm -> perm.assignedTo(session))) return;
 
         String exception = Arrays.stream(requiredPermissions)
                 .filter(requiredPermission -> !requiredPermission.assignedTo(session))

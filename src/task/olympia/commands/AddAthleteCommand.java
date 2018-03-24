@@ -1,23 +1,25 @@
 package task.olympia.commands;
 
-import task.constructs.program.Argument;
-import task.constructs.program.CommandSignature;
+import task.constructs.commands.Argument;
+import task.constructs.commands.CommandSignature;
+import task.interfaces.IRestrictedCommand;
 import task.exceptions.*;
 import task.olympia.OlympiaApplication;
 import task.olympia.models.Athlete;
 import task.userinterface.auth.Permission;
 import task.interfaces.ICommand;
+import task.userinterface.auth.Session;
 
 import java.util.List;
 
-import static task.constructs.program.Datatype.STRING;
+import static task.constructs.commands.Datatype.STRING;
 import static task.userinterface.auth.Permission.MUST_BE_ADMIN;
 import static task.userinterface.auth.Permission.MUST_BE_LOGGED_IN;
 
 /**
  * The Add Athlete Command.
  */
-public class AddAthleteCommand extends AppCommand {
+public class AddAthleteCommand implements IRestrictedCommand {
     private OlympiaApplication app;
     private Permission[] requiredPermissions = new Permission[]{MUST_BE_LOGGED_IN, MUST_BE_ADMIN};
     private CommandSignature commandSignature = new CommandSignature(
@@ -39,24 +41,13 @@ public class AddAthleteCommand extends AppCommand {
     }
 
     @Override
-    void restrictedExecution(ICommand command, List<String> outputStream) throws IllegalCallOfCommandException {
+    public void restrictedExecution(ICommand command, List<String> outputStream) throws IllegalCallOfCommandException {
         Athlete athlete = this.app.getParser().parseAthlete(command.getArgs());
         this.app.addAthlete(athlete);
 
         outputStream.add("OK");
     }
 
-    /**
-     * @return - returns the app
-     **/
-    @Override
-    public OlympiaApplication getApp() {
-        return this.app;
-    }
-
-    /**
-     * @return - returns the commandSignature
-     * */
     @Override
     public CommandSignature getCommandSignature() {
         return this.commandSignature;
@@ -65,5 +56,15 @@ public class AddAthleteCommand extends AppCommand {
     @Override
     public Permission[] getPermissionFlags() {
         return this.requiredPermissions;
+    }
+
+    @Override
+    public Session getSession() {
+        return this.app.getSession();
+    }
+
+    @Override
+    public void validateCommand(ICommand command) throws ValidationException {
+        this.app.getInputValidator().validateCommand(command, this.commandSignature);
     }
 }

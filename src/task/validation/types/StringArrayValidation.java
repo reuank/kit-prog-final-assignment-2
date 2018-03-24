@@ -1,6 +1,6 @@
 package task.validation.types;
 
-import task.constructs.program.Datatype;
+import task.constructs.commands.Datatype;
 import task.validation.ValidationResult;
 import task.lang.Message;
 import task.exceptions.ValidationException;
@@ -44,7 +44,7 @@ public class StringArrayValidation {
      * @return Returns the current Validation object, so that other validation can be applied.
      */
     public StringArrayValidation isNotEmpty() {
-        for (int i = 0; i < this.validateMe.length; i++) {
+        for (String single : this.validateMe) {
             if (!this.validateMe[0].equals("")) { // Found something!
                 return this;
             }

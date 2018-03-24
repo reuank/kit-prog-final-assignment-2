@@ -41,7 +41,7 @@ public class Main {
      * creates a new olympia app with the correponding tables,
      * registers all valid commands and runs the the user interface.
      *
-     * @param args The passed program args.
+     * @param args The passed commands args.
      */
     public static void main(String[] args) {
         /* ------------- SETUP USER INTERFACE ------------- */

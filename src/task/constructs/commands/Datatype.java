@@ -1,4 +1,4 @@
-package task.constructs.program;
+package task.constructs.commands;
 
 /**
  * The enum that is used to model different datatypes, so that requirements can be defined precisely

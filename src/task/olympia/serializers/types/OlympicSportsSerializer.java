@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Serializes olympic sports.
+ */
 public class OlympicSportsSerializer implements IListSerializer<OlympicSport, String> {
     @Override
     public List<String> serialize(List<OlympicSport> list) {

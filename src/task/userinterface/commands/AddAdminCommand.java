@@ -1,19 +1,22 @@
 package task.userinterface.commands;
 
-import task.constructs.program.Argument;
-import task.constructs.program.CommandSignature;
+import task.constructs.commands.Argument;
+import task.constructs.commands.CommandSignature;
 import task.exceptions.IllegalCallOfCommandException;
+import task.exceptions.ValidationException;
 import task.interfaces.ICommand;
+import task.interfaces.IRestrictedCommand;
 import task.userinterface.CLI;
 import task.userinterface.auth.Permission;
+import task.userinterface.auth.Session;
 import task.userinterface.models.User;
 
 import java.util.List;
 
-import static task.constructs.program.Datatype.STRING;
+import static task.constructs.commands.Datatype.STRING;
 import static task.userinterface.models.UserGroup.ADMIN;
 
-public class AddAdminCommand extends UiCommand {
+public class AddAdminCommand implements IRestrictedCommand {
     private CLI userInterface;
     private Permission[] requiredPermissions = new Permission[]{};
     private CommandSignature commandSignature = new CommandSignature(
@@ -32,26 +35,14 @@ public class AddAdminCommand extends UiCommand {
         this.userInterface = userInterface;
     }
 
-
     @Override
-    void restrictedExecution(ICommand command, List<String> outputStream) throws IllegalCallOfCommandException {
+    public void restrictedExecution(ICommand command, List<String> outputStream) throws IllegalCallOfCommandException {
         User newUser = userInterface.getUiParser().parseUser(ADMIN, command.getArgs());
         this.userInterface.tryRegisterUser(newUser);
 
         outputStream.add("OK");
     }
 
-    /**
-     * @return - returns the user interface
-     **/
-    @Override
-    public CLI getUi() {
-        return this.userInterface;
-    }
-
-    /**
-     * @return - returns the commandSignature
-     * */
     @Override
     public CommandSignature getCommandSignature() {
         return this.commandSignature;
@@ -60,5 +51,15 @@ public class AddAdminCommand extends UiCommand {
     @Override
     public Permission[] getPermissionFlags() {
         return this.requiredPermissions;
+    }
+
+    @Override
+    public Session getSession() {
+        return this.userInterface.getSession();
+    }
+
+    @Override
+    public void validateCommand(ICommand command) throws ValidationException {
+        this.userInterface.getInputValidator().validateCommand(command, this.commandSignature);
     }
 }

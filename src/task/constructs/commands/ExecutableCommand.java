@@ -1,4 +1,4 @@
-package task.constructs.program;
+package task.constructs.commands;
 
 public abstract class ExecutableCommand {
 }

@@ -1,6 +1,6 @@
 package task.userinterface.validation.types;
 
-import task.constructs.program.CommandSignature;
+import task.constructs.commands.CommandSignature;
 import task.exceptions.ValidationException;
 import task.interfaces.ICommand;
 import task.validation.SyntaxValidator;
