@@ -1,4 +1,8 @@
 .idea/
+out/
+*.pdf
+UserId.id
+allCheckstyleRules.xml
 
 # Compiled class file
 *.class
