@@ -3,6 +3,7 @@ out/
 *.pdf
 UserId.id
 allCheckstyleRules.xml
+.DS_Store
 
 # Compiled class file
 *.class
